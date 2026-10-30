@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MegaMarket SAS — Sistemas expertos (actualizado)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EDEEE5;
+  --paper-raised:#F7F7F2;
+  --ink:#1E2A32;
+  --ink-soft:#51606A;
+  --line:#CACDC0;
+  --amber:#C97A22;
+  --amber-soft:#EEDBB6;
+  --green:#3C7A5B;
+  --green-soft:#DCEAE1;
+  --rust:#AE4530;
+  --rust-soft:#F1DAD2;
+  --font-display:'Oswald',sans-serif;
+  --font-body:'IBM Plex Sans',sans-serif;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--font-body);
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto;}
+  *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+}
+a{color:inherit;}
+:focus-visible{outline:3px solid var(--amber); outline-offset:2px;}
+
+/* ---------- topbar / tabs (CSS-only, radio-driven) ---------- */
+.topbar{
+  position:sticky; top:0; z-index:20;
+  background:var(--ink); color:var(--paper-raised);
+  padding:0 clamp(16px,4vw,48px);
+  display:flex; align-items:center; justify-content:space-between; gap:24px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.marca{
+  font-family:var(--font-display); font-weight:600; font-size:1.05rem;
+  letter-spacing:0.02em; padding:16px 0; white-space:nowrap;
+}
+.marca span{display:block; font-family:var(--font-body); font-weight:400; font-size:0.72rem; color:#A9B4B9;}
+
+.tabs{display:flex; gap:2px;}
+.tabs label{
+  font-family:var(--font-display); font-weight:500; font-size:0.92rem;
+  letter-spacing:0.01em; padding:18px 18px; cursor:pointer;
+  color:#B8C2C6; border-bottom:3px solid transparent;
+  transition:color .15s ease, border-color .15s ease;
+}
+.tabs label:hover{color:#EDEEE5;}
+#tab-s1:checked ~ .topbar .tabs label[for="tab-s1"],
+#tab-s2:checked ~ .topbar .tabs label[for="tab-s2"]{
+  color:var(--paper-raised); border-bottom-color:var(--amber);
+}
+
+/* ---------- hero ---------- */
+.hero{
+  padding:clamp(32px,6vw,64px) clamp(16px,4vw,48px) 24px;
+  max-width:1100px; margin:0 auto;
+}
+.hero h1{
+  font-family:var(--font-display); font-weight:700;
+  font-size:clamp(2.2rem,5vw,3.4rem); line-height:1.05; margin:0 0 12px;
+  letter-spacing:-0.01em;
+}
+.hero p.lede{
+  font-size:1.05rem; color:var(--ink-soft); max-width:62ch; margin:0 0 28px;
+}
+.manifiesto{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:1px; background:var(--line); border:1px solid var(--line);
+  max-width:760px;
+}
+.manifiesto div{background:var(--paper-raised); padding:12px 16px;}
+.manifiesto span{display:block; font-size:0.7rem; color:var(--ink-soft); margin-bottom:3px;}
+.manifiesto strong{font-family:var(--font-display); font-weight:500; font-size:0.95rem;}
+
+/* ---------- layout general ---------- */
+main{max-width:1100px; margin:0 auto; padding:0 clamp(16px,4vw,48px) 80px;}
+.sistema{display:none;}
+#tab-s1:checked ~ main #sistema1{display:block;}
+#tab-s2:checked ~ main #sistema2{display:block;}
+
+section.bloque{margin-top:56px;}
+section.bloque h2{
+  font-family:var(--font-display); font-weight:600; font-size:1.5rem;
+  margin:0 0 6px;
+}
+section.bloque p.explicacion{color:var(--ink-soft); max-width:70ch; margin:0 0 24px;}
+
+/* ---------- diagrama de arquitectura ---------- */
+.arquitectura{display:flex; align-items:stretch; gap:10px; flex-wrap:wrap; margin-bottom:8px;}
+.arq-caja{
+  flex:1 1 220px; border:1.5px solid var(--ink); background:var(--paper-raised);
+  padding:16px 18px; border-radius:2px;
+}
+.arq-caja h3{font-family:var(--font-display); font-weight:600; font-size:0.98rem; margin:0 0 6px;}
+.arq-caja p{margin:0; font-size:0.88rem; color:var(--ink-soft);}
+.arq-caja.motor{background:var(--ink); color:var(--paper-raised); border-color:var(--ink);}
+.arq-caja.motor p{color:#C4CDD1;}
+.arq-flecha{
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.6rem; color:var(--ink-soft); flex:0 0 auto; width:28px;
+}
+.arq-conclusion{
+  border:1.5px dashed var(--amber); background:var(--amber-soft);
+  padding:12px 18px; margin-top:10px; border-radius:2px; font-size:0.9rem;
+}
+.arq-conclusion strong{font-family:var(--font-display); font-weight:600;}
+@media (max-width:760px){
+  .arquitectura{flex-direction:column;}
+  .arq-flecha{transform:rotate(90deg); width:auto; height:20px;}
+}
+
+/* ---------- lista de reglas (manifiesto) ---------- */
+.reglas-lista{list-style:none; margin:0; padding:0; border-top:1px solid var(--line);}
+.regla-fila{
+  display:grid; grid-template-columns:52px 1fr auto; gap:16px; align-items:start;
+  padding:14px 4px; border-bottom:1px solid var(--line);
+}
+.regla-codigo{
+  font-family:var(--font-display); font-weight:600; font-size:0.95rem;
+  color:var(--ink); border:1.5px solid var(--ink); text-align:center;
+  padding:3px 0; border-radius:2px; height:fit-content;
+}
+.regla-texto{font-size:0.92rem;}
+.regla-texto strong{font-weight:600;}
+.regla-tag{
+  font-size:0.72rem; font-weight:500; padding:4px 10px; border-radius:100px;
+  white-space:nowrap; height:fit-content; align-self:center;
+}
+.tag-inclusion{background:var(--amber-soft); color:#7A4C10;}
+.tag-veto{background:var(--rust-soft); color:var(--rust);}
+.tag-defecto{background:var(--line); color:var(--ink-soft);}
+.tag-politica{background:var(--green-soft); color:var(--green);}
+@media (max-width:600px){
+  .regla-fila{grid-template-columns:40px 1fr; }
+  .regla-tag{grid-column:1 / -1;}
+}
+
+/* ---------- resumen numérico ---------- */
+.resumen-stats{display:flex; gap:32px; flex-wrap:wrap; margin:24px 0 8px;}
+.stat-grande{}
+.stat-grande strong{display:block; font-family:var(--font-display); font-size:2.2rem; font-weight:700; line-height:1;}
+.stat-grande span{font-size:0.82rem; color:var(--ink-soft);}
+
+/* ---------- bloque de ruta / casos ---------- */
+.ruta-bloque{margin-bottom:36px;}
+.ruta-titulo{display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:14px; border-bottom:2px solid var(--ink); padding-bottom:8px;}
+.ruta-titulo h3{font-family:var(--font-display); font-weight:600; font-size:1.15rem; margin:0;}
+.stat-mini{font-size:0.85rem; color:var(--ink-soft);}
+.stat-mini strong{font-family:var(--font-display); font-size:1.1rem; color:var(--ink);}
+
+.casos-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px;}
+
+.caso-card{
+  background:var(--paper-raised); border:1px solid var(--line); border-left:5px solid var(--line);
+  border-radius:2px; padding:0;
+}
+.caso-card.caso-incluido, .producto-card.producto-viable{border-left-color:var(--green);}
+.caso-card.caso-excluido, .producto-card.producto-no-viable{border-left-color:var(--rust);}
+
+.caso-card summary{list-style:none; cursor:pointer; padding:14px 16px;}
+.caso-card summary::-webkit-details-marker{display:none;}
+.caso-card summary::after{content:"Ver razonamiento"; display:block; font-size:0.74rem; color:var(--ink-soft); margin-top:8px;}
+.caso-card[open] summary::after{content:"Ocultar razonamiento";}
+
+.caso-cabecera{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+.caso-nombre{font-family:var(--font-display); font-weight:500; font-size:1rem;}
+.caso-badges{display:flex; flex-direction:column; align-items:flex-end; gap:6px;}
+
+.chip{font-size:0.68rem; font-weight:500; padding:3px 9px; border-radius:100px; white-space:nowrap;}
+.chip-alta{background:var(--amber); color:#fff;}
+.chip-media{background:var(--amber-soft); color:#7A4C10;}
+.chip-baja{background:transparent; border:1px solid var(--amber); color:var(--amber);}
+
+.stamp{
+  display:inline-block; position:relative; font-family:var(--font-display);
+  text-transform:uppercase; letter-spacing:0.07em; font-size:0.72rem; font-weight:600;
+  border:2px solid currentColor; border-radius:3px; padding:3px 10px;
+  transform:rotate(-3deg);
+}
+.stamp::after{content:""; position:absolute; inset:2px; border:1px solid currentColor; opacity:.45; border-radius:2px;}
+.stamp.incluido, .stamp.viable{color:var(--green);}
+.stamp.excluido, .stamp.no-viable{color:var(--rust);}
+
+.caso-cuerpo{padding:0 16px 18px; display:grid; grid-template-columns:1fr 1fr; gap:18px; border-top:1px solid var(--line); margin-top:2px; padding-top:14px;}
+.caso-cuerpo h4{font-family:var(--font-display); font-weight:600; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--ink-soft); margin:0 0 8px;}
+.hechos-lista{list-style:none; margin:0; padding:0; font-size:0.82rem;}
+.hechos-lista li{display:flex; justify-content:space-between; gap:8px; padding:4px 0; border-bottom:1px dotted var(--line);}
+.hechos-lista span{color:var(--ink-soft);}
+.razones-lista{margin:0; padding-left:18px; font-size:0.85rem;}
+.razones-lista li{margin-bottom:8px;}
+@media (max-width:560px){ .caso-cuerpo{grid-template-columns:1fr;} }
+
+/* ---------- sistema 2: tarjetas de producto ---------- */
+.productos-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:18px; margin-top:6px;}
+.producto-card{background:var(--paper-raised); border:1px solid var(--line); border-left:5px solid var(--line); border-radius:2px; padding:18px 18px 16px;}
+.producto-cabecera{display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;}
+.producto-cabecera .caso-nombre{font-size:1.05rem;}
+.criterios-lista{list-style:none; margin:0; padding:0;}
+.criterio-fila{display:flex; gap:10px; align-items:flex-start; padding:8px 0; border-bottom:1px dotted var(--line); font-size:0.85rem;}
+.criterio-fila:last-child{border-bottom:none;}
+.criterio-icono{flex:0 0 20px; font-weight:700;}
+.criterio-fila.check .criterio-icono{color:var(--green);}
+.criterio-fila.cross .criterio-icono{color:var(--rust);}
+.caso-nota{margin:12px 0 0; font-size:0.85rem; color:var(--ink-soft); font-style:italic;}
+
+/* ---------- matriz comparativa ---------- */
+.matriz-wrap{overflow-x:auto; margin-top:8px;}
+table.matriz{border-collapse:collapse; width:100%; min-width:640px; font-size:0.85rem;}
+table.matriz th, table.matriz td{border:1px solid var(--line); padding:9px 10px; text-align:center;}
+table.matriz thead th{background:var(--ink); color:var(--paper-raised); font-family:var(--font-display); font-weight:500;}
+table.matriz td.col-producto{text-align:left; font-weight:500;}
+table.matriz td.ok{color:var(--green); font-weight:700;}
+table.matriz td.no{color:var(--rust); font-weight:700;}
+table.matriz td.col-veredicto{font-family:var(--font-display); font-weight:600; letter-spacing:0.02em;}
+
+/* ---------- leyenda ---------- */
+.leyenda{display:flex; flex-wrap:wrap; gap:18px; margin-top:18px; font-size:0.82rem; color:var(--ink-soft);}
+.leyenda span{display:inline-flex; align-items:center; gap:6px;}
+.leyenda i{width:12px; height:12px; border-radius:2px; display:inline-block;}
+.i-green{background:var(--green);} .i-rust{background:var(--rust);} .i-amber{background:var(--amber);}
+
+footer{
+  border-top:1px solid var(--line); padding:28px clamp(16px,4vw,48px); text-align:center;
+  color:var(--ink-soft); font-size:0.82rem;
+}
+
+/* ---------- bitácora de cambios ---------- */
+.bitacora{
+  border:1.5px solid var(--amber); background:var(--amber-soft);
+  padding:18px 20px; border-radius:2px; margin-bottom:32px;
+}
+.bitacora h3{font-family:var(--font-display); font-weight:600; font-size:1.02rem; margin:0 0 4px; color:#5A3908;}
+.bitacora > p{margin:0 0 14px; font-size:0.88rem; color:#5A3908;}
+.bitacora-lista{list-style:none; margin:0; padding:0;}
+.bitacora-fila{
+  display:grid; grid-template-columns:220px auto 1fr; gap:14px; align-items:center;
+  padding:10px 0; border-top:1px solid rgba(90,57,8,0.25);
+}
+.bitacora-fila:first-child{border-top:none;}
+.bitacora-producto{font-family:var(--font-display); font-weight:500; font-size:0.92rem; color:#3D2704;}
+.bitacora-transicion{display:flex; align-items:center; gap:8px;}
+.bitacora-flecha{font-size:1.1rem; color:#5A3908;}
+.bitacora-motivo{font-size:0.84rem; color:#5A3908;}
+.stamp-mini{
+  font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.05em;
+  font-size:0.66rem; font-weight:600; padding:2px 8px; border-radius:100px; border:1.5px solid currentColor;
+}
+.stamp-mini.viable{color:var(--green);}
+.stamp-mini.no-viable{color:var(--rust);}
+@media (max-width:640px){
+  .bitacora-fila{grid-template-columns:1fr; gap:4px;}
+}
+
+/* ---------- ribbon "cambió" en tarjeta de producto ---------- */
+.producto-card.con-cambio{border-left-color:var(--amber);}
+.ribbon-cambio{
+  background:var(--ink); color:var(--paper-raised); font-size:0.72rem;
+  padding:6px 12px; margin:-18px -18px 14px; border-radius:2px 2px 0 0;
+  display:flex; flex-direction:column; gap:2px;
+}
+.ribbon-cambio span:first-child{font-family:var(--font-display); font-weight:500; letter-spacing:0.02em; color:var(--amber-soft);}
+.ribbon-detalle{color:#C4CDD1; font-size:0.72rem;}
+.criterio-fila.criterio-resaltado{background:var(--amber-soft); margin:0 -10px; padding:8px 10px; border-radius:2px;}
+table.matriz tr.fila-cambio td{background:var(--amber-soft);}
+table.matriz tr.fila-cambio td.col-producto{font-weight:600; border-left:3px solid var(--amber);}
+</style>
+</head>
+<body>
+
+<input type="radio" name="tabs" id="tab-s1" checked style="display:none">
+<input type="radio" name="tabs" id="tab-s2" style="display:none">
+
+<div class="topbar">
+  <div class="marca">MegaMarket SAS<span>Sistemas expertos — Sprint 2 (actualizado con datos nuevos)</span></div>
+  <nav class="tabs">
+    <label for="tab-s1">Sistema 1 · Logística</label>
+    <label for="tab-s2">Sistema 2 · Portafolio</label>
+  </nav>
+</div>
+
+<div class="hero">
+  <h1>Dos decisiones, dos sistemas expertos</h1>
+  <p class="lede">Esta versión corre sobre los CSV actualizados por el equipo. Las reglas no cambiaron: lo que cambió fueron los datos de la memoria de trabajo, y eso bastó para mover algunas conclusiones -- que es exactamente lo que se espera de un sistema experto bien separado en capas.</p>
+  <div class="manifiesto">
+    <div><span>Curso</span><strong>Fundamentos de Analítica</strong></div>
+    <div><span>Empresa</span><strong>MegaMarket SAS</strong></div>
+    <div><span>Región</span><strong>Valle de Aburrá</strong></div>
+    <div><span>Equipo</span><strong>Argote · Cardona · Valencia · Gil</strong></div>
+  </div>
+</div>
+
+<main>
+
+<section id="sistema1" class="sistema">
+
+  <section class="bloque">
+    <h2>Arquitectura del sistema</h2>
+    <p class="explicacion">Decide qué clientes entran en la ruta de reparto de esta semana, antes de que A* calcule el recorrido. Los hechos ahora se leen de <code>memoria_trabajo_logistica.csv</code>.</p>
+    <div class="arquitectura">
+      <div class="arq-caja">
+        <h3>Base de conocimiento</h3>
+        <p>Reglas generales (umbrales de días, flete) y atributos fijos de cada cliente: ruta y rotación del producto.</p>
+      </div>
+      <div class="arq-flecha">&#8594;</div>
+      <div class="arq-caja motor">
+        <h3>Motor de inferencia</h3>
+        <p>Encadenamiento hacia adelante, una pasada por cliente: evalúa R1–R3, si ninguna aplica cae en R6, y si el cliente es candidato revisa los vetos R4 y R5.</p>
+      </div>
+      <div class="arq-flecha">&#8592;</div>
+      <div class="arq-caja">
+        <h3>Memoria de trabajo</h3>
+        <p>Datos de esta semana: visita del mercaderista, días sin entrega, queja urgente, PVP actualizado, factura y flete.</p>
+      </div>
+    </div>
+    <div class="arq-conclusion"><strong>Conclusión →</strong> incluir o excluir de la ruta, con prioridad (alta / media / baja) y la razón que lo sustenta.</div>
+  </section>
+
+  <section class="bloque">
+    <h2>Reglas de negocio</h2>
+    <p class="explicacion">R1–R3 deciden candidatura. R4 y R5 son restricciones duras: anulan la inclusión aunque el cliente ya fuera candidato. R6 es la salida por defecto. H1 es una política de servicio, no una regla de filtrado.</p>
+    <ul class="reglas-lista">
+      <li class="regla-fila tipo-inclusion"><span class="regla-codigo">R1</span><span class="regla-texto"><strong>Percepción del mercaderista.</strong> Si el mercaderista, en su visita más reciente, reporta que el stock de la referencia está bajo, se incluye al cliente. La prioridad depende de la rotación del producto en ese punto: alta, media o baja.</span><span class="regla-tag tag-inclusion">Inclusión</span></li><li class="regla-fila tipo-inclusion"><span class="regla-codigo">R2</span><span class="regla-texto"><strong>Respaldo por falta de visibilidad.</strong> Si el punto de venta no tiene visita reciente del mercaderista, han pasado más de 15 días desde la última entrega y la rotación es media o alta, se incluye preventivamente. Solo aplica cuando no hubo visita: la observación directa siempre manda sobre esta estimación por tiempo.</span><span class="regla-tag tag-inclusion">Inclusión</span></li><li class="regla-fila tipo-inclusion"><span class="regla-codigo">R3</span><span class="regla-texto"><strong>Queja urgente.</strong> Si el cliente reportó una queja urgente, se incluye en la ruta y se le da la prioridad más alta.</span><span class="regla-tag tag-inclusion">Inclusión</span></li><li class="regla-fila tipo-veto"><span class="regla-codigo">R4</span><span class="regla-texto"><strong>Rentabilidad del flete.</strong> Si el flete estimado supera el 4% del valor de la factura del pedido, no se despacha esta semana, sin importar qué otra regla se haya activado.</span><span class="regla-tag tag-veto">Restricción dura</span></li><li class="regla-fila tipo-veto"><span class="regla-codigo">R5</span><span class="regla-texto"><strong>Precio actualizado en el punto de venta.</strong> Si el punto de venta no ha actualizado el precio de venta al público según la lista vigente de MegaMarket, no se despacha.</span><span class="regla-tag tag-veto">Restricción dura</span></li><li class="regla-fila tipo-defecto"><span class="regla-codigo">R6</span><span class="regla-texto"><strong>Regla por defecto.</strong> Si ninguna de R1, R2 o R3 se cumple, el cliente no entra en la ruta de esta semana.</span><span class="regla-tag tag-defecto">Regla por defecto</span></li><li class="regla-fila tipo-politica"><span class="regla-codigo">H1</span><span class="regla-texto"><strong>Ventana de entrega.</strong> Todo pedido incluido en la ruta debe entregarse entre 48 y 72 horas después de generada la orden. Es un compromiso de servicio, no una regla que decide quién entra.</span><span class="regla-tag tag-politica">Política de servicio</span></li>
+    </ul>
+  </section>
+
+  <section class="bloque">
+    <h2>Casuística: ¿quién entra en la ruta de esta semana?</h2>
+    <p class="explicacion">Cada tarjeta es un cliente. El sello indica la conclusión; ábrela para ver los hechos que se usaron y el razonamiento completo del motor.</p>
+    <div class="resumen-stats">
+      <div class="stat-grande"><strong>4/8</strong><span>incluidos en Poblado</span></div>
+      <div class="stat-grande"><strong>2/4</strong><span>incluidos en Valle de Aburrá</span></div>
+    </div>
+    
+    <div class="ruta-bloque">
+      <div class="ruta-titulo">
+        <h3>Ruta Poblado</h3>
+        <div class="stat-mini"><strong>4</strong><span>de 8 clientes en la ruta de esta semana</span></div>
+      </div>
+      <div class="casos-grid">
+    <details class="caso-card caso-excluido">
+      <summary>
+        <div class="caso-cabecera">
+          <span class="caso-nombre">Fruver del Río</span>
+          <div class="caso-badges">
+            
+            <span class="stamp excluido">Excluido</span>
+          </div>
+        </div>
+      </summary>
+      <div class="caso-cuerpo">
+        <div class="caso-columna"><h4>Hechos de esta semana</h4>
+      <ul class="hechos-lista">
+        <li><span>Rotación del producto</span><strong>Alta</strong></li>
+        <li><span>Visita del mercaderista</span><strong>Sí</strong></li>
+        <li><span>Stock reportado bajo</span><strong>Sí</strong></li>
+        <li><span>Días sin entrega</span><strong>10</strong></li>
+        <li><span>Queja urgente</span><strong>No</strong></li>
+        <li><span>PVP actualizado</span><strong>Sí</strong></li>
+        <li><span>Flete / factura</span><strong>5.9%</strong></li>
+      </ul></div>
+        <div class="caso-columna"><h4>Razonamiento del motor</h4><ul class="razones-lista"><li>R1 — El mercaderista reportó stock bajo en su visita (rotación alta → prioridad ALTA).</li><li>R4 (VETO) — El flete ($50,000) es el 5.9% de la factura, por encima del 4% permitido.</li></ul></div>
+      </div>
+    </details>
+    <details class="caso-card caso-excluido">
+      <summary>
+        <div class="caso-cabecera">
+          <span class="caso-nombre">Fruver Visitación</span>
+          <div class="caso-badges">
+            
+            <span class="stamp excluido">Excluido</span>
+          </div>
+        </div>
+      </summary>
+      <div class="caso-cuerpo">
+        <div class="caso-columna"><h4>Hechos de esta semana</h4>
+      <ul class="hechos-lista">
+        <li><span>Rotación del producto</span><strong>Media</strong></li>
+        <li><span>Visita del mercaderista</span><strong>Sí</strong></li>
+        <li><span>Stock reportado bajo</span><strong>No</strong></li>
+        <li><span>Días sin entrega</span><strong>20</strong></li>
+        <li><span>Queja urgente</span><strong>No</strong></li>
+        <li><span>PVP actualizado</span><strong>Sí</strong></li>
+        <li><span>Flete / factura</span><strong>2.5%</strong></li>
+      </ul></div>
+        <div class="caso-columna"><h4>Razonamiento del motor</h4><ul class="razones-lista"><li>R6 — Por defecto: no cumple ningún criterio de inclusión esta semana.</li></ul></div>
+      </div>
+    </details>
+    <details class="caso-card caso-incluido">
+      <summary>
+        <div class="caso-cabecera">
+          <span class="caso-nombre">Five Sisters</span>
+          <div class="caso-badges">
+            <span class="chip chip-baja">Prioridad BAJA</span>
+            <span class="stamp incluido">Incluido</span>
+          </div>
+        </div>
+      </summary>
+      <div class="caso-cuerpo">
+        <div class="caso-columna"><h4>Hechos de esta semana</h4>
+      <ul class="hechos-lista">
+        <li><span>Rotación del producto</span><strong>Media</strong></li>
+        <li><span>Visita del mercaderista</span><strong>No</strong></li>
+        
+        <li><span>Días sin entrega</span><strong>18</strong></li>
+        <li><span>Queja urgente</span><strong>No</strong></li>
+        <li><span>PVP actualizado</span><strong>Sí</strong></li>
+        <li><span>Flete / factura</span><strong>2.9%</strong></li>
+      </ul></div>
+        <div class="caso-columna"><h4>Razonamiento del motor</h4><ul class="razones-lista"><li>R2 — Sin visita reciente, 18 días sin entrega, rotación media.</li></ul></div>
+      </div>
+    </details>
+    <details class="caso-card caso-incluido">
+      <summary>
+        <div class="caso-cabecera">
+          <span class="caso-nombre">Supermercado Merka 10</span>
+          <div class="caso-badges">
+            <span class="chip chip-alta">Prioridad ALTA</span>
+            <span class="stamp incluido">Incluido</span>
+          </div>
+        </div>
+      </summary>
+      <div class="caso-cuerpo">
+        <div class="caso-columna"><h4>Hechos de esta semana</h4>
+      <ul class="hechos-lista">
+        <li><span>Rotación del producto</span><strong>Alta</strong></li>
+        <li><span>Visita del mercaderista</span><strong>Sí</strong></li>
+        <li><span>Stock reportado bajo</span><strong>No</strong></li>
+        <li><span>Días sin entrega</span><strong>8</strong></li>
+        <li><span>Queja urgente</span><strong>Sí</strong></li>
+        <li><span>PVP actualizado</span><strong>Sí</strong></li>
+        <li><span>Flete / factura</span><strong>3.0%</strong></li>
+      </ul></div>
+        <div class="caso-columna"><h4>Razonamiento del motor</h4><ul class="razones-lista"><li>R3 — Queja urgente reportada: debe visitarse primero.</li></ul></div>
+      </div>
+    </details>
+    <details class="caso-card caso-excluido">
+      <summary>
+        <div class="caso-cabecera">
+          <span class="caso-nombre">Hotel Four Points</span>
+          <div class="caso-badges">
+            
+            <span class="stamp excluido">Excluido</span>
+          </div>
+        </div>
+      </summary>
+      <div class="caso-cuerpo">
+        <div class="caso-columna"><h4>Hechos de esta semana</h4>
+      <ul class="hechos-lista">
+        <li><span>Rotación del producto</span><strong>Baja</strong></li>
+        <li><span>Visita del mercaderista</span><strong>Sí</strong></li>
+        <li><span>Stock reportado bajo</span><strong>No</strong></li>
+        <li><span>Días sin entrega</span><strong>5</strong></li>
+        <li><span>Queja urgente</span><strong>No</strong></li>
+        <li><span>PVP actualizado</span><strong>Sí</strong></li>
+        <li><span>Flete / factura</span><strong>1.5%</strong></li>
+      </ul></div>
+        <div class="caso-columna"><h4>Razonamiento del motor</h4><ul class="razones-lista"><li>R6 — Por defecto: no cumple ningún criterio de inclusión esta semana.</li></ul></div>
+      </div>
+    </details>
+    <details class="caso-card caso-incluido">
+      <summary>
+        <div class="caso-cabecera">
+          <span class="caso-nombre">Mercados Verona</span>
+          <div class="caso-badges">
+            <span class="chip chip-media">Prioridad MEDIA</span>
+            <span class="stamp incluido">Incluido</span>
+          </div>
+        </div>
+      </summary>
+      <div class="caso-cuerpo">
+        <div class="caso-columna"><h4>Hechos de esta semana</h4>
+      <ul class="hechos-lista">
+        <li><span>Rotación del producto</span><strong>Media</strong></li>
+        <li><span>Visita del mercaderista</span><strong>Sí</strong></li>
+        <li><span>Stock reportado bajo</span><strong>Sí</strong></li>
+        <li><span>Días sin entrega</span><strong>22</strong></li>
+        <li><span>Queja urgente</span><strong>No</strong></li>
+        <li><span>PVP actualizado</span><strong>Sí</strong></li>
+        <li><span>Flete / factura</span><strong>3.3%</strong></li>
+      </ul></div>
+        <div class="caso-columna"><h4>Razonamiento del motor</h4><ul class="razones-lista"><li>R1 — El mercaderista reportó stock bajo en su visita (rotación media → prioridad MEDIA).</li></ul></div>
+      </div>
+    </details>
+    <details class="caso-card caso-incluido">
+      <summary>
+        <div class="caso-cabecera">
+          <span class="caso-nombre">EAFIT La Bodeguita</span>
+          <div class="caso-badges">
+            <span class="chip chip-alta">Prioridad ALTA</span>
+            <span class="stamp incluido">Incluido</span>
+          </div>
+        </div>
+      </summary>
+      <div class="caso-cuerpo">
+        <div class="caso-columna"><h4>Hechos de esta semana</h4>
+      <ul class="hechos-lista">
+        <li><span>Rotación del producto</span><strong>Alta</strong></li>
+        <li><span>Visita del mercaderista</span><strong>No</strong></li>
+        
+        <li><span>Días sin entrega</span><strong>6</strong></li>
+        <li><span>Queja urgente</span><strong>Sí</strong></li>
+        <li><span>PVP actualizado</span><strong>Sí</strong></li>
+        <li><span>Flete / factura</span><strong>2.2%</strong></li>
+      </ul></div>
+        <div class="caso-columna"><h4>Razonamiento del motor</h4><ul class="razones-lista"><li>R3 — Queja urgente reportada: debe visitarse primero.</li></ul></div>
+      </div>
+    </details>
+    <details class="caso-card caso-excluido">
+      <summary>
+        <div class="caso-cabecera">
+          <span class="caso-nombre">Redetrans</span>
+          <div class="caso-badges">
+            
+            <span class="stamp excluido">Excluido</span>
+          </div>
+        </div>
+      </summary>
+      <div class="caso-cuerpo">
+        <div class="caso-columna"><h4>Hechos de esta semana</h4>
+      <ul class="hechos-lista">
+        <li><span>Rotación del producto</span><strong>Baja</strong></li>
+        <li><span>Visita del mercaderista</span><strong>Sí</strong></li>
+        <li><span>Stock reportado bajo</span><strong>Sí</strong></li>
+        <li><span>Días sin entrega</span><strong>12</strong></li>
+        <li><span>Queja urgente</span><strong>No</strong></li>
+        <li><span>PVP actualizado</span><strong>No</strong></li>
+        <li><span>Flete / factura</span><strong>3.2%</strong></li>
+      </ul></div>
+        <div class="caso-columna"><h4>Razonamiento del motor</h4><ul class="razones-lista"><li>R1 — El mercaderista reportó stock bajo en su visita (rotación baja → prioridad BAJA).</li><li>R5 (VETO) — El punto de venta no ha actualizado el PVP según la lista vigente de MegaMarket.</li></ul></div>
+      </div>
+    </details></div>
+    </div>
+    <div class="ruta-bloque">
+      <div class="ruta-titulo">
+        <h3>Ruta Valle de Aburrá</h3>
+        <div class="stat-mini"><strong>2</strong><span>de 4 clientes en la ruta de esta semana</span></div>
+      </div>
+      <div class="casos-grid">
+    <details class="caso-card caso-incluido">
+      <summary>
+        <div class="caso-cabecera">
+          <span class="caso-nombre">CEDI Vaquita Itagüí</span>
+          <div class="caso-badges">
+            <span class="chip chip-alta">Prioridad ALTA</span>
+            <span class="stamp incluido">Incluido</span>
+          </div>
+        </div>
+      </summary>
+      <div class="caso-cuerpo">
+        <div class="caso-columna"><h4>Hechos de esta semana</h4>
+      <ul class="hechos-lista">
+        <li><span>Rotación del producto</span><strong>Alta</strong></li>
+        <li><span>Visita del mercaderista</span><strong>Sí</strong></li>
+        <li><span>Stock reportado bajo</span><strong>Sí</strong></li>
+        <li><span>Días sin entrega</span><strong>14</strong></li>
+        <li><span>Queja urgente</span><strong>No</strong></li>
+        <li><span>PVP actualizado</span><strong>Sí</strong></li>
+        <li><span>Flete / factura</span><strong>1.6%</strong></li>
+      </ul></div>
+        <div class="caso-columna"><h4>Razonamiento del motor</h4><ul class="razones-lista"><li>R1 — El mercaderista reportó stock bajo en su visita (rotación alta → prioridad ALTA).</li></ul></div>
+      </div>
+    </details>
+    <details class="caso-card caso-excluido">
+      <summary>
+        <div class="caso-cabecera">
+          <span class="caso-nombre">CEDI Euro La Estrella</span>
+          <div class="caso-badges">
+            
+            <span class="stamp excluido">Excluido</span>
+          </div>
+        </div>
+      </summary>
+      <div class="caso-cuerpo">
+        <div class="caso-columna"><h4>Hechos de esta semana</h4>
+      <ul class="hechos-lista">
+        <li><span>Rotación del producto</span><strong>Media</strong></li>
+        <li><span>Visita del mercaderista</span><strong>No</strong></li>
+        
+        <li><span>Días sin entrega</span><strong>25</strong></li>
+        <li><span>Queja urgente</span><strong>No</strong></li>
+        <li><span>PVP actualizado</span><strong>Sí</strong></li>
+        <li><span>Flete / factura</span><strong>5.3%</strong></li>
+      </ul></div>
+        <div class="caso-columna"><h4>Razonamiento del motor</h4><ul class="razones-lista"><li>R2 — Sin visita reciente, 25 días sin entrega, rotación media.</li><li>R4 (VETO) — El flete ($95,000) es el 5.3% de la factura, por encima del 4% permitido.</li></ul></div>
+      </div>
+    </details>
+    <details class="caso-card caso-excluido">
+      <summary>
+        <div class="caso-cabecera">
+          <span class="caso-nombre">CEDI Merkepaisa</span>
+          <div class="caso-badges">
+            
+            <span class="stamp excluido">Excluido</span>
+          </div>
+        </div>
+      </summary>
+      <div class="caso-cuerpo">
+        <div class="caso-columna"><h4>Hechos de esta semana</h4>
+      <ul class="hechos-lista">
+        <li><span>Rotación del producto</span><strong>Media</strong></li>
+        <li><span>Visita del mercaderista</span><strong>Sí</strong></li>
+        <li><span>Stock reportado bajo</span><strong>Sí</strong></li>
+        <li><span>Días sin entrega</span><strong>10</strong></li>
+        <li><span>Queja urgente</span><strong>No</strong></li>
+        <li><span>PVP actualizado</span><strong>Sí</strong></li>
+        <li><span>Flete / factura</span><strong>5.6%</strong></li>
+      </ul></div>
+        <div class="caso-columna"><h4>Razonamiento del motor</h4><ul class="razones-lista"><li>R1 — El mercaderista reportó stock bajo en su visita (rotación media → prioridad MEDIA).</li><li>R4 (VETO) — El flete ($25,000) es el 5.6% de la factura, por encima del 4% permitido.</li></ul></div>
+      </div>
+    </details>
+    <details class="caso-card caso-incluido">
+      <summary>
+        <div class="caso-cabecera">
+          <span class="caso-nombre">CEDI Supermú</span>
+          <div class="caso-badges">
+            <span class="chip chip-alta">Prioridad ALTA</span>
+            <span class="stamp incluido">Incluido</span>
+          </div>
+        </div>
+      </summary>
+      <div class="caso-cuerpo">
+        <div class="caso-columna"><h4>Hechos de esta semana</h4>
+      <ul class="hechos-lista">
+        <li><span>Rotación del producto</span><strong>Baja</strong></li>
+        <li><span>Visita del mercaderista</span><strong>Sí</strong></li>
+        <li><span>Stock reportado bajo</span><strong>No</strong></li>
+        <li><span>Días sin entrega</span><strong>9</strong></li>
+        <li><span>Queja urgente</span><strong>Sí</strong></li>
+        <li><span>PVP actualizado</span><strong>Sí</strong></li>
+        <li><span>Flete / factura</span><strong>3.2%</strong></li>
+      </ul></div>
+        <div class="caso-columna"><h4>Razonamiento del motor</h4><ul class="razones-lista"><li>R3 — Queja urgente reportada: debe visitarse primero.</li></ul></div>
+      </div>
+    </details></div>
+    </div>
+
+  </section>
+
+</section>
+
+<section id="sistema2" class="sistema">
+
+  
+    <div class="bitacora">
+      <h3>Qué cambió con la actualización del CSV</h3>
+      <p>El archivo <code>memoria_trabajo_portafolio.csv</code> se actualizó. Las reglas (C1–C7) y el motor de inferencia no se tocaron -- solo cambiaron los hechos de dos productos, y eso fue suficiente para invertir su veredicto:</p>
+      <ul class="bitacora-lista">
+        
+    <li class="bitacora-fila">
+      <span class="bitacora-producto">Productos Alquería (lácteos)</span>
+      <span class="bitacora-transicion">
+        <span class="stamp-mini no-viable">No viable</span>
+        <span class="bitacora-flecha">&#8594;</span>
+        <span class="stamp-mini viable">Viable</span>
+      </span>
+      <span class="bitacora-motivo">C6 (Vida útil): antes no cumplía, ahora cumple.</span>
+    </li>
+    <li class="bitacora-fila">
+      <span class="bitacora-producto">Bebidas</span>
+      <span class="bitacora-transicion">
+        <span class="stamp-mini viable">Viable</span>
+        <span class="bitacora-flecha">&#8594;</span>
+        <span class="stamp-mini no-viable">No viable</span>
+      </span>
+      <span class="bitacora-motivo">C6 (Vida útil): antes cumplía, ahora no cumple.</span>
+    </li>
+
+      </ul>
+    </div>
+
+  <section class="bloque">
+    <h2>Arquitectura del sistema</h2>
+    <p class="explicacion">Decide si MegaMarket debe incursionar en distribuir una nueva categoría de producto. Es un sistema experto independiente — sin A*, sin heurísticas de ruta. Los hechos ahora se leen de <code>memoria_trabajo_portafolio.csv</code>.</p>
+    <div class="arquitectura">
+      <div class="arq-caja">
+        <h3>Base de conocimiento</h3>
+        <p>Los 7 criterios del gerente general. No cambiaron en esta actualización.</p>
+      </div>
+      <div class="arq-flecha">&#8594;</div>
+      <div class="arq-caja motor">
+        <h3>Motor de inferencia</h3>
+        <p>Verifica que las 7 luces (C1–C7) estén en verde a la vez. Tampoco cambió: sigue siendo la misma función.</p>
+      </div>
+      <div class="arq-flecha">&#8592;</div>
+      <div class="arq-caja">
+        <h3>Memoria de trabajo</h3>
+        <p>Hechos de las 3 referencias candidatas. <strong>Esto es lo único que se actualizó</strong> -- dos valores de C6 se intercambiaron entre Lácteos y Bebidas.</p>
+      </div>
+    </div>
+    <div class="arq-conclusion"><strong>Conclusión →</strong> viable solo si se cumplen los 7 criterios a la vez; si falla uno, el producto no entra al portafolio.</div>
+  </section>
+
+  <section class="bloque">
+    <h2>Criterios del gerente general</h2>
+    <p class="explicacion">A diferencia del sistema de logística, aquí no hay reglas que compitan entre sí: es un chequeo de "todas las luces en verde".</p>
+    <ul class="reglas-lista">
+      <li class="regla-fila tipo-inclusion"><span class="regla-codigo">C1</span><span class="regla-texto"><strong>Afinidad de portafolio y canal.</strong> El producto es afín al portafolio actual (consumo masivo) y se vende por el mismo canal y segmento: cadenas de supermercado.</span><span class="regla-tag tag-inclusion">Requisito obligatorio</span></li><li class="regla-fila tipo-inclusion"><span class="regla-codigo">C2</span><span class="regla-texto"><strong>Cumplimiento legal.</strong> El producto cuenta con registro sanitario vigente y ficha técnica de respaldo.</span><span class="regla-tag tag-inclusion">Requisito obligatorio</span></li><li class="regla-fila tipo-inclusion"><span class="regla-codigo">C3</span><span class="regla-texto"><strong>Viabilidad operativa.</strong> Es fácil de transportar, almacenar y manipular, y no representa riesgo de contaminación cruzada con los alimentos que ya maneja MegaMarket.</span><span class="regla-tag tag-inclusion">Requisito obligatorio</span></li><li class="regla-fila tipo-inclusion"><span class="regla-codigo">C4</span><span class="regla-texto"><strong>Calidad y presentación.</strong> Cumple altos estándares de calidad y tiene una presentación estéticamente atractiva.</span><span class="regla-tag tag-inclusion">Requisito obligatorio</span></li><li class="regla-fila tipo-inclusion"><span class="regla-codigo">C5</span><span class="regla-texto"><strong>Complementariedad.</strong> Complementa el portafolio actual y permite hacer venta cruzada.</span><span class="regla-tag tag-inclusion">Requisito obligatorio</span></li><li class="regla-fila tipo-inclusion"><span class="regla-codigo">C6</span><span class="regla-texto"><strong>Vida útil.</strong> Tiene una vida útil de 6 meses o más.</span><span class="regla-tag tag-inclusion">Requisito obligatorio</span></li><li class="regla-fila tipo-inclusion"><span class="regla-codigo">C7</span><span class="regla-texto"><strong>Precio y rentabilidad.</strong> Tiene un precio asequible para el canal y ofrece un margen de rentabilidad adecuado.</span><span class="regla-tag tag-inclusion">Requisito obligatorio</span></li>
+    </ul>
+  </section>
+
+  <section class="bloque">
+    <h2>Casuística: las 3 referencias candidatas</h2>
+    <p class="explicacion">Productos de aseo para el hogar, lácteos Alquería y bebidas, evaluados criterio por criterio. Las tarjetas con la franja oscura arriba son las que cambiaron de veredicto con la actualización.</p>
+    <div class="resumen-stats">
+      <div class="stat-grande"><strong>1/3</strong><span>referencias viables en este ciclo</span></div>
+    </div>
+    <div class="productos-grid">
+      
+    <article class="producto-card producto-no-viable">
+      
+      <div class="producto-cabecera">
+        <span class="caso-nombre">Productos de aseo para el hogar</span>
+        <span class="stamp no-viable">No viable</span>
+      </div>
+      <ul class="criterios-lista">
+        <li class="criterio-fila cross">
+          <span class="criterio-icono">&#10005;</span>
+          <span class="criterio-texto"><strong>C1 · Afinidad de portafolio y canal</strong><br>El producto es afín al portafolio actual (consumo masivo) y se vende por el mismo canal y segmento: cadenas de supermercado.</span>
+        </li>
+        <li class="criterio-fila check">
+          <span class="criterio-icono">&#10003;</span>
+          <span class="criterio-texto"><strong>C2 · Cumplimiento legal</strong><br>El producto cuenta con registro sanitario vigente y ficha técnica de respaldo.</span>
+        </li>
+        <li class="criterio-fila cross">
+          <span class="criterio-icono">&#10005;</span>
+          <span class="criterio-texto"><strong>C3 · Viabilidad operativa</strong><br>Es fácil de transportar, almacenar y manipular, y no representa riesgo de contaminación cruzada con los alimentos que ya maneja MegaMarket.</span>
+        </li>
+        <li class="criterio-fila check">
+          <span class="criterio-icono">&#10003;</span>
+          <span class="criterio-texto"><strong>C4 · Calidad y presentación</strong><br>Cumple altos estándares de calidad y tiene una presentación estéticamente atractiva.</span>
+        </li>
+        <li class="criterio-fila check">
+          <span class="criterio-icono">&#10003;</span>
+          <span class="criterio-texto"><strong>C5 · Complementariedad</strong><br>Complementa el portafolio actual y permite hacer venta cruzada.</span>
+        </li>
+        <li class="criterio-fila check">
+          <span class="criterio-icono">&#10003;</span>
+          <span class="criterio-texto"><strong>C6 · Vida útil</strong><br>Tiene una vida útil de 6 meses o más.</span>
+        </li>
+        <li class="criterio-fila check">
+          <span class="criterio-icono">&#10003;</span>
+          <span class="criterio-texto"><strong>C7 · Precio y rentabilidad</strong><br>Tiene un precio asequible y un margen de rentabilidad de al menos 12%.</span>
+        </li></ul>
+      <p class="caso-nota">No cumple: C1, C3.</p>
+    </article>
+    <article class="producto-card producto-viable con-cambio">
+      <div class="ribbon-cambio">
+          <span>Cambió con la actualización del CSV</span>
+          <div class="ribbon-detalle">C6 (Vida útil): antes no cumplía, ahora cumple.</div>
+        </div>
+      <div class="producto-cabecera">
+        <span class="caso-nombre">Productos Alquería (lácteos)</span>
+        <span class="stamp viable">Viable</span>
+      </div>
+      <ul class="criterios-lista">
+        <li class="criterio-fila check">
+          <span class="criterio-icono">&#10003;</span>
+          <span class="criterio-texto"><strong>C1 · Afinidad de portafolio y canal</strong><br>El producto es afín al portafolio actual (consumo masivo) y se vende por el mismo canal y segmento: cadenas de supermercado.</span>
+        </li>
+        <li class="criterio-fila check">
+          <span class="criterio-icono">&#10003;</span>
+          <span class="criterio-texto"><strong>C2 · Cumplimiento legal</strong><br>El producto cuenta con registro sanitario vigente y ficha técnica de respaldo.</span>
+        </li>
+        <li class="criterio-fila check">
+          <span class="criterio-icono">&#10003;</span>
+          <span class="criterio-texto"><strong>C3 · Viabilidad operativa</strong><br>Es fácil de transportar, almacenar y manipular, y no representa riesgo de contaminación cruzada con los alimentos que ya maneja MegaMarket.</span>
+        </li>
+        <li class="criterio-fila check">
+          <span class="criterio-icono">&#10003;</span>
+          <span class="criterio-texto"><strong>C4 · Calidad y presentación</strong><br>Cumple altos estándares de calidad y tiene una presentación estéticamente atractiva.</span>
+        </li>
+        <li class="criterio-fila check">
+          <span class="criterio-icono">&#10003;</span>
+          <span class="criterio-texto"><strong>C5 · Complementariedad</strong><br>Complementa el portafolio actual y permite hacer venta cruzada.</span>
+        </li>
+        <li class="criterio-fila check criterio-resaltado">
+          <span class="criterio-icono">&#10003;</span>
+          <span class="criterio-texto"><strong>C6 · Vida útil</strong><br>Tiene una vida útil de 6 meses o más.</span>
+        </li>
+        <li class="criterio-fila check">
+          <span class="criterio-icono">&#10003;</span>
+          <span class="criterio-texto"><strong>C7 · Precio y rentabilidad</strong><br>Tiene un precio asequible y un margen de rentabilidad de al menos 12%.</span>
+        </li></ul>
+      <p class="caso-nota">Cumple los 7 criterios del gerente general.</p>
+    </article>
+    <article class="producto-card producto-no-viable con-cambio">
+      <div class="ribbon-cambio">
+          <span>Cambió con la actualización del CSV</span>
+          <div class="ribbon-detalle">C6 (Vida útil): antes cumplía, ahora no cumple.</div>
+        </div>
+      <div class="producto-cabecera">
+        <span class="caso-nombre">Bebidas</span>
+        <span class="stamp no-viable">No viable</span>
+      </div>
+      <ul class="criterios-lista">
+        <li class="criterio-fila check">
+          <span class="criterio-icono">&#10003;</span>
+          <span class="criterio-texto"><strong>C1 · Afinidad de portafolio y canal</strong><br>El producto es afín al portafolio actual (consumo masivo) y se vende por el mismo canal y segmento: cadenas de supermercado.</span>
+        </li>
+        <li class="criterio-fila check">
+          <span class="criterio-icono">&#10003;</span>
+          <span class="criterio-texto"><strong>C2 · Cumplimiento legal</strong><br>El producto cuenta con registro sanitario vigente y ficha técnica de respaldo.</span>
+        </li>
+        <li class="criterio-fila check">
+          <span class="criterio-icono">&#10003;</span>
+          <span class="criterio-texto"><strong>C3 · Viabilidad operativa</strong><br>Es fácil de transportar, almacenar y manipular, y no representa riesgo de contaminación cruzada con los alimentos que ya maneja MegaMarket.</span>
+        </li>
+        <li class="criterio-fila check">
+          <span class="criterio-icono">&#10003;</span>
+          <span class="criterio-texto"><strong>C4 · Calidad y presentación</strong><br>Cumple altos estándares de calidad y tiene una presentación estéticamente atractiva.</span>
+        </li>
+        <li class="criterio-fila check">
+          <span class="criterio-icono">&#10003;</span>
+          <span class="criterio-texto"><strong>C5 · Complementariedad</strong><br>Complementa el portafolio actual y permite hacer venta cruzada.</span>
+        </li>
+        <li class="criterio-fila cross criterio-resaltado">
+          <span class="criterio-icono">&#10005;</span>
+          <span class="criterio-texto"><strong>C6 · Vida útil</strong><br>Tiene una vida útil de 6 meses o más.</span>
+        </li>
+        <li class="criterio-fila check">
+          <span class="criterio-icono">&#10003;</span>
+          <span class="criterio-texto"><strong>C7 · Precio y rentabilidad</strong><br>Tiene un precio asequible y un margen de rentabilidad de al menos 12%.</span>
+        </li></ul>
+      <p class="caso-nota">No cumple: C6.</p>
+    </article>
+
+    </div>
+  </section>
+
+  <section class="bloque">
+    <h2>Resumen comparativo</h2>
+    <div class="matriz-wrap">
+      <table class="matriz">
+        <thead><tr><th style="text-align:left;">Producto</th><th>C1</th><th>C2</th><th>C3</th><th>C4</th><th>C5</th><th>C6</th><th>C7</th><th>Veredicto</th></tr></thead>
+        <tbody>
+          <tr><td class="col-producto">Productos de aseo para el hogar</td><td class="no">&#10005;</td><td class="ok">&#10003;</td><td class="no">&#10005;</td><td class="ok">&#10003;</td><td class="ok">&#10003;</td><td class="ok">&#10003;</td><td class="ok">&#10003;</td><td class="col-veredicto no">No viable</td></tr><tr class="fila-cambio"><td class="col-producto">Productos Alquería (lácteos)</td><td class="ok">&#10003;</td><td class="ok">&#10003;</td><td class="ok">&#10003;</td><td class="ok">&#10003;</td><td class="ok">&#10003;</td><td class="ok">&#10003;</td><td class="ok">&#10003;</td><td class="col-veredicto ok">Viable</td></tr><tr class="fila-cambio"><td class="col-producto">Bebidas</td><td class="ok">&#10003;</td><td class="ok">&#10003;</td><td class="ok">&#10003;</td><td class="ok">&#10003;</td><td class="ok">&#10003;</td><td class="no">&#10005;</td><td class="ok">&#10003;</td><td class="col-veredicto no">No viable</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="leyenda">
+      <span><i class="i-green"></i>Criterio cumplido</span>
+      <span><i class="i-rust"></i>Criterio incumplido</span>
+      <span><i class="i-amber"></i>Fila con veredicto que cambió en esta actualización</span>
+    </div>
+  </section>
+
+</section>
+
+</main>
+
+<footer>
+  Proyecto acumulativo de Fundamentos de Analítica — MegaMarket SAS, Valle de Aburrá.
+  Jacobo Argote, Andrés Cardona, Miguel Valencia y Juan José Gil.
+</footer>
+
+</body>
+</html>

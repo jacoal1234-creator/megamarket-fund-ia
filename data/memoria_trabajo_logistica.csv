@@ -1,0 +1,13 @@
+cliente,visita_mercaderista_disponible,mercaderista_reporta_stock_bajo,dias_desde_ultima_entrega,queja_urgente,precio_actualizado_en_punto_de_venta,valor_factura_pedido,costo_flete_estimado
+Fruver del Río,Sí,Sí,10,No,Sí,850000,50000
+Fruver Visitación,Sí,No,20,No,Sí,600000,15000
+Five Sisters,No,No hubo visita,18,No,Sí,700000,20000
+Supermercado Merka 10,Sí,No,8,Sí,Sí,500000,15000
+Hotel Four Points,Sí,No,5,No,Sí,1200000,18000
+Mercados Verona,Sí,Sí,22,No,Sí,300000,10000
+EAFIT La Bodeguita,No,No hubo visita,6,Sí,Sí,900000,20000
+Redetrans,Sí,Sí,12,No,No,400000,13000
+CEDI Vaquita Itagüí,Sí,Sí,14,No,Sí,2500000,40000
+CEDI Euro La Estrella,No,No hubo visita,25,No,Sí,1800000,95000
+CEDI Merkepaisa,Sí,Sí,10,No,Sí,450000,25000
+CEDI Supermú,Sí,No,9,Sí,Sí,380000,12000

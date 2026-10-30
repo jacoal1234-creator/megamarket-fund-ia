@@ -1,0 +1,16 @@
+variable,conjunto,a,b,c,d,descripcion
+dias_desde_ultima_entrega,Reciente,0,0,5,10,Se le entregó hace poco
+dias_desde_ultima_entrega,Normal,7,12,12,17,Ciclo de reposición habitual
+dias_desde_ultima_entrega,Vencido,14,20,30,30,Lleva mucho tiempo sin entrega
+flete_pct,Bajo,0,0,1.5,2.5,Flete holgado frente al tope del 4%
+flete_pct,Medio,1.5,2.5,2.5,3.5,Flete razonable
+flete_pct,Alto,2.5,3.5,4,4,Flete cerca del tope del 4%
+senal_stock,Sin alerta,0,0,0.2,0.5,El mercaderista visitó y el stock está bien
+senal_stock,Incierto,0.2,0.5,0.5,0.8,No hubo visita: no se sabe
+senal_stock,Bajo,0.5,0.8,1,1,El mercaderista reportó stock bajo
+rotacion,Baja,1,1,1.5,3,Rotación baja en el punto de venta
+rotacion,Media,1.5,3,3,4.5,Rotación media en el punto de venta
+rotacion,Alta,3,4.5,5,5,Rotación alta en el punto de venta
+prioridad,Baja,0,0,25,45,No entra esta semana
+prioridad,Media,25,50,50,75,Entra en la tanda MEDIA
+prioridad,Alta,55,75,100,100,Entra en la tanda ALTA

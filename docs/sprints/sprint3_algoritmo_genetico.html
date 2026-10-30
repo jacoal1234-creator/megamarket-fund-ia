@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MegaMarket SAS — Sprint 3 (interactivo)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F4F6F9;
+  --paper-raised:#FFFFFF;
+  --ink:#18222E;
+  --ink-soft:#5B6776;
+  --line:#DAE0E7;
+  --amber:#0E8A7D;
+  --amber-soft:#D8F0EC;
+  --green:#1E8E5A;
+  --green-soft:#DDF1E6;
+  --rust:#C8372D;
+  --rust-soft:#FBE0DD;
+  --blue:#2F6FDB;
+  --blue-soft:#E1EAFB;
+  --purple:#E8692B;
+  --purple-soft:#FDEADC;
+  --font-display:'Oswald',sans-serif;
+  --font-body:'IBM Plex Sans',sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#12171D; --paper-raised:#1B222A; --ink:#E6EAEE; --ink-soft:#9AA6B3; --blue:#6C9CF0; --purple:#F08A55; --amber:#2FB5A5; --green:#4CC48A; --rust:#EE6B60;
+    --line:#2F3944; --amber-soft:#14302C; --green-soft:#16301F; --rust-soft:#3A1E1B;
+    --blue-soft:#182A47; --purple-soft:#3D2517;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#12171D; --paper-raised:#1B222A; --ink:#E6EAEE; --ink-soft:#9AA6B3; --blue:#6C9CF0; --purple:#F08A55; --amber:#2FB5A5; --green:#4CC48A; --rust:#EE6B60;
+  --line:#2F3944; --amber-soft:#14302C; --green-soft:#16301F; --rust-soft:#3A1E1B;
+  --blue-soft:#182A47; --purple-soft:#3D2517;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--font-body); line-height:1.5; -webkit-font-smoothing:antialiased;}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.01ms !important; transition-duration:.01ms !important;} }
+:focus-visible{outline:3px solid var(--amber); outline-offset:2px;}
+
+input.tab-radio{display:none;}
+.topbar{position:sticky; top:0; z-index:20; background:var(--ink); color:var(--paper-raised); padding:0 clamp(16px,4vw,48px); display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap; border-bottom:1px solid rgba(255,255,255,0.08);}
+.marca{font-family:var(--font-display); font-weight:600; font-size:1.05rem; letter-spacing:.02em; padding:14px 0; white-space:nowrap;}
+.marca span{display:block; font-family:var(--font-body); font-weight:400; font-size:.72rem; color:#A9B4B9; margin-top:2px;}
+.tabs{display:flex; gap:2px; flex-wrap:wrap;}
+.tabs label{font-family:var(--font-display); font-weight:500; font-size:.9rem; letter-spacing:.01em; padding:16px 16px; cursor:pointer; color:#B8C2C6; border-bottom:3px solid transparent; transition:color .15s ease,border-color .15s ease; white-space:nowrap;}
+.tabs label:hover{color:#EDEEE5;}
+#tab-a:checked ~ .topbar label[for="tab-a"]{color:var(--paper-raised); border-bottom-color:#6C9CF0;}
+#tab-c:checked ~ .topbar label[for="tab-c"]{color:var(--paper-raised); border-bottom-color:#F08A55;}
+
+main{max-width:1100px; margin:0 auto; padding:0 clamp(16px,4vw,48px) 80px;}
+.parte{display:none;}
+#tab-a:checked ~ main #parteA{display:block;}
+#tab-c:checked ~ main #parteC{display:block;}
+
+.hero{padding:clamp(24px,4vw,40px) 0 8px;}
+.hero h1{font-family:var(--font-display); font-weight:700; font-size:clamp(1.55rem,3.6vw,2.2rem); line-height:1.15; margin:0 0 10px; letter-spacing:-.01em;}
+.hero p.lede{font-size:.98rem; color:var(--ink-soft); max-width:72ch; margin:0;}
+
+section.bloque{margin-top:38px;}
+section.bloque h2{font-family:var(--font-display); font-weight:600; font-size:1.22rem; margin:0 0 6px;}
+section.bloque h3{font-family:var(--font-display); font-weight:600; font-size:1.05rem; margin:20px 0 6px;}
+section.bloque p.explicacion{color:var(--ink-soft); max-width:74ch; margin:0 0 16px; font-size:.93rem;}
+
+.banner-conexion{border:1px solid var(--blue); background:var(--blue-soft); border-radius:2px; padding:14px 18px; margin-bottom:22px; font-size:.88rem; color:var(--ink);}
+.banner-conexion strong{font-family:var(--font-display);}
+.banner-conexion .chips-conexion{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;}
+.banner-conexion .chip-b{font-size:.74rem; font-weight:500; padding:4px 10px; border-radius:100px; background:var(--paper-raised); border:1px solid var(--blue); color:var(--ink); white-space:nowrap;}
+
+.restricciones-panel{border:1px solid var(--line); background:var(--paper-raised); border-radius:2px; padding:16px 20px; margin-bottom:20px;}
+.restriccion-fila{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:14px;}
+.restriccion-fila:last-child{margin-bottom:0;}
+.restriccion-fila label{font-size:.85rem; width:170px; flex-shrink:0;}
+.restriccion-fila input[type="range"]{flex:1 1 220px; accent-color:var(--blue);}
+.restriccion-fila .valor{font-family:var(--font-display); font-weight:600; font-size:.92rem; width:150px; text-align:right;}
+.uso-barra{height:8px; border-radius:4px; background:var(--line); overflow:hidden; margin-top:4px;}
+.uso-barra > div{height:100%; background:var(--green); transition:width .2s ease, background .2s ease;}
+.uso-barra.excedido > div{background:var(--rust);}
+
+/* ---------- producto editor ---------- */
+.productos-editor-wrap{overflow-x:auto; margin-bottom:16px;}
+.productos-editor{border-collapse:collapse; width:100%; min-width:600px; font-size:.82rem;}
+.productos-editor th{background:var(--ink); color:var(--paper-raised); font-family:var(--font-display); font-weight:500; font-size:.78rem; padding:8px 10px; text-align:left; white-space:nowrap;}
+.productos-editor th:first-child{width:32px; text-align:center;}
+.productos-editor th:last-child{width:36px;}
+.productos-editor td{padding:4px 4px; border-bottom:1px solid var(--line); vertical-align:middle;}
+.productos-editor td:first-child{text-align:center; font-family:var(--font-display); font-weight:600; font-size:.78rem; color:var(--ink-soft);}
+.productos-editor input[type="text"]{width:100%; min-width:120px;}
+.productos-editor input[type="number"]{width:100%; min-width:80px; text-align:right;}
+.productos-editor input{font-family:var(--font-body); font-size:.82rem; padding:6px 8px; border:1.5px solid var(--line); border-radius:2px; background:var(--paper); color:var(--ink);}
+.productos-editor input:focus{border-color:var(--amber); outline:none;}
+.productos-editor tr.incluido{background:var(--green-soft);}
+.btn-remove{background:none; border:none; color:var(--rust); font-size:1.1rem; cursor:pointer; padding:4px 8px; border-radius:2px; font-weight:700; line-height:1;}
+.btn-remove:hover{background:var(--rust-soft);}
+.btn-remove:disabled{color:var(--line); cursor:not-allowed;}
+.editor-footer{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:20px;}
+.contador-productos{font-size:.82rem; color:var(--ink-soft);}
+
+/* ---------- candidatos cards ---------- */
+.candidatos-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:10px;}
+.candidato-card{background:var(--paper-raised); border:1px solid var(--line); border-left:5px solid var(--line); border-radius:2px; padding:11px 13px; font-size:.8rem; transition:border-color .2s ease;}
+.candidato-card.incluido{border-left-color:var(--green);}
+.candidato-card.atacado{border-left-color:var(--rust);}
+.candidato-card h3{font-family:var(--font-display); font-weight:500; font-size:.85rem; margin:0 0 7px;}
+.candidato-card dl{margin:0; display:grid; grid-template-columns:auto auto; gap:2px 8px; font-size:.75rem; color:var(--ink-soft);}
+.candidato-card dt{font-weight:500;}
+.candidato-card dd{margin:0; text-align:right;}
+
+button.btn{font-family:var(--font-display); font-weight:500; font-size:.85rem; padding:10px 18px; border:1.5px solid var(--ink); background:var(--paper-raised); color:var(--ink); border-radius:2px; cursor:pointer; letter-spacing:.01em;}
+button.btn:hover{background:var(--ink); color:var(--paper-raised);}
+button.btn-primario{background:var(--ink); color:var(--paper-raised);}
+button.btn-primario:hover{background:var(--amber); border-color:var(--amber); color:#fff;}
+button.btn:disabled{opacity:.4; cursor:not-allowed;}
+
+.panel-resultado{border:1px solid var(--line); background:var(--paper-raised); border-radius:2px; padding:20px; margin-top:20px;}
+.control-generacion{display:flex; align-items:center; gap:14px; margin-bottom:18px;}
+.control-generacion input[type="range"]{flex:1; accent-color:var(--blue);}
+.control-generacion .etiqueta-gen{font-family:var(--font-display); font-weight:600; font-size:.9rem; width:170px; text-align:right;}
+
+.cromosoma-grid{display:flex; gap:4px; flex-wrap:wrap; margin-bottom:14px;}
+.gen-celda{width:34px; height:34px; border-radius:2px; border:1.5px solid var(--line); background:var(--paper); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:600; font-size:.78rem; color:var(--ink-soft); transition:background .2s ease, border-color .2s ease, color .2s ease; position:relative;}
+.gen-celda.activo{background:var(--blue); border-color:var(--blue); color:#fff;}
+#cromosoma-grid-c .gen-celda.activo{background:var(--purple); border-color:var(--purple);}
+.gen-celda .gen-label{position:absolute; top:-14px; font-size:.5rem; color:var(--ink-soft); white-space:nowrap; max-width:50px; overflow:hidden; text-overflow:ellipsis;}
+
+.chips-incluidos{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px; min-height:26px;}
+.chip{font-size:.72rem; font-weight:500; padding:4px 10px; border-radius:100px; background:var(--blue-soft); color:var(--ink); white-space:nowrap;}
+#chips-incluidos-c .chip{background:var(--purple-soft);}
+.chip-rust, #chips-incluidos-c .chip.chip-rust{background:var(--rust-soft); color:var(--rust); font-weight:600;}
+
+.stats-actuales{display:flex; gap:26px; flex-wrap:wrap; margin-bottom:20px;}
+.stat-grande strong{display:block; font-family:var(--font-display); font-size:1.5rem; font-weight:700; line-height:1;}
+.stat-grande span{font-size:.75rem; color:var(--ink-soft);}
+.stat-grande.excedido strong{color:var(--rust);}
+
+.grafico-wrap{overflow-x:auto;}
+svg.grafico{width:100%; height:auto; min-width:480px;}
+.leyenda-grafico{display:flex; gap:16px; flex-wrap:wrap; margin-top:6px; margin-bottom:10px; font-size:.74rem; color:var(--ink-soft);}
+.leyenda-grafico span{display:inline-flex; align-items:center; gap:5px;}
+.leyenda-grafico i{width:14px; height:3px; display:inline-block; border-radius:2px;}
+
+.comparacion-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+@media (max-width:620px){ .comparacion-grid{grid-template-columns:1fr;} }
+.comparacion-grid-3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px;}
+@media (max-width:780px){ .comparacion-grid-3{grid-template-columns:1fr;} }
+.resultado-caja{background:var(--paper-raised); border:1px solid var(--line); border-left:5px solid var(--blue); border-radius:2px; padding:14px 16px;}
+.resultado-caja.fb{border-left-color:var(--amber);}
+.resultado-caja.minimax{border-left-color:var(--purple);}
+.resultado-caja h3{font-family:var(--font-display); font-weight:600; font-size:.9rem; margin:0 0 8px;}
+.resultado-caja ul{margin:0 0 8px; padding-left:18px; font-size:.85rem;}
+.nota-empate{background:var(--amber-soft); border:1px solid var(--amber); border-radius:2px; padding:10px 14px; margin-top:14px; font-size:.84rem; color:var(--ink);}
+
+.ciclo-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px;}
+.ciclo-caja{background:var(--paper-raised); border:1.5px solid var(--ink); border-radius:2px; padding:11px 13px;}
+.ciclo-caja h3{font-family:var(--font-display); font-weight:600; font-size:.84rem; margin:0 0 5px;}
+.ciclo-caja p{margin:0; font-size:.77rem; color:var(--ink-soft);}
+
+/* ---------- Parte B ---------- */
+.erosion-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:10px; margin-bottom:18px;}
+.erosion-item{background:var(--paper-raised); border:1px solid var(--line); border-radius:2px; padding:10px 14px;}
+.erosion-item label{font-size:.82rem; font-weight:500; display:block; margin-bottom:4px;}
+.erosion-item .slider-row{display:flex; align-items:center; gap:10px;}
+.erosion-item input[type="range"]{flex:1; accent-color:var(--rust);}
+.erosion-item .erosion-val{font-family:var(--font-display); font-weight:600; font-size:.88rem; width:50px; text-align:right;}
+
+.matriz-wrap{overflow-x:auto; margin-bottom:16px;}
+.matriz-tabla{border-collapse:collapse; font-size:.85rem; min-width:380px;}
+.matriz-tabla th,.matriz-tabla td{padding:10px 14px; border:1px solid var(--line); text-align:center;}
+.matriz-tabla th{background:var(--ink); color:var(--paper-raised); font-family:var(--font-display); font-weight:500; font-size:.82rem;}
+.matriz-tabla td{background:var(--paper-raised);}
+.matriz-tabla td.nash-cell{background:var(--green-soft); font-weight:600;}
+.matriz-tabla td.seq-cell{outline:3px solid var(--amber); outline-offset:-3px;}
+
+.select-prod{font-family:var(--font-body); font-size:.88rem; padding:8px 12px; border:1.5px solid var(--line); border-radius:2px; background:var(--paper-raised); color:var(--ink); margin-bottom:12px;}
+.input-num{font-family:var(--font-body); font-size:.85rem; padding:6px 10px; border:1.5px solid var(--line); border-radius:2px; background:var(--paper-raised); color:var(--ink); width:110px; text-align:right;}
+
+.param-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:10px; margin-bottom:14px;}
+.param-item{display:flex; flex-direction:column; gap:4px;}
+.param-item label{font-size:.78rem; color:var(--ink-soft);}
+.param-item input,.param-item select{font-family:var(--font-body); font-size:.85rem; padding:7px 10px; border:1.5px solid var(--line); border-radius:2px; background:var(--paper-raised); color:var(--ink);}
+
+.arbol-minimax{background:var(--paper-raised); border:1px solid var(--line); border-radius:2px; padding:14px 18px; font-size:.82rem; font-family:var(--font-body); margin-bottom:16px; line-height:1.7;}
+.arbol-minimax .nivel-0{font-weight:600; font-size:.88rem;}
+.arbol-minimax .nivel-1{padding-left:24px; color:var(--ink-soft);}
+.arbol-minimax .nivel-1.atacado{color:var(--rust); font-weight:600;}
+
+.sensibilidad-tabla{border-collapse:collapse; font-size:.82rem; width:100%; margin-bottom:14px;}
+.sensibilidad-tabla th,.sensibilidad-tabla td{padding:8px 12px; border:1px solid var(--line); text-align:right;}
+.sensibilidad-tabla th{background:var(--ink); color:var(--paper-raised); font-family:var(--font-display); font-weight:500; text-align:center;}
+.sensibilidad-tabla td:first-child{text-align:left; font-weight:500;}
+.sensibilidad-tabla tr.mejor-fila td{background:var(--blue-soft); font-weight:600;}
+
+.scatter-dot{transition:r .2s;}
+.aviso-fb{background:var(--amber-soft); border:1px solid var(--amber); border-radius:2px; padding:10px 14px; margin-top:14px; font-size:.84rem; color:var(--ink);}
+
+/* ---------- métricas de mejora / empeoramiento ---------- */
+.delta{display:inline-flex; align-items:center; gap:4px; font-family:var(--font-display); font-weight:600; font-size:.78rem; padding:2px 9px; border-radius:100px; white-space:nowrap;}
+.delta.up{background:var(--green-soft); color:var(--green);}
+.delta.down{background:var(--rust-soft); color:var(--rust);}
+.delta.flat{background:var(--line); color:var(--ink-soft);}
+.metricas-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(215px,1fr)); gap:10px; margin:16px 0;}
+.metrica{background:var(--paper-raised); border:1px solid var(--line); border-top:3px solid var(--line); border-radius:4px; padding:12px 14px;}
+.metrica.destacada{border-top-color:var(--blue);}
+#metricas-minimax .metrica.destacada{border-top-color:var(--purple);}
+.metrica .m-label{font-size:.72rem; color:var(--ink-soft); font-weight:500;}
+.metrica .m-valor{font-family:var(--font-display); font-weight:700; font-size:1.3rem; line-height:1.2; margin:3px 0 6px;}
+.metrica .m-valor.chico{font-size:.98rem;}
+.metrica .m-nota{font-size:.72rem; color:var(--ink-soft); margin-top:6px;}
+.lectura{background:var(--paper-raised); border:1px solid var(--line); border-left:5px solid var(--purple); border-radius:2px; padding:12px 16px; font-size:.88rem; margin-top:4px;}
+.lectura strong{font-family:var(--font-display);}
+.cmp-wrap{overflow-x:auto; margin-top:16px;}
+.cmp-wrap h3{font-family:var(--font-display); font-weight:600; font-size:1rem; margin:0 0 8px;}
+.cmp-tabla td.txt{text-align:left; font-size:.78rem;}
+.cmp-tabla th.c-a{border-bottom:3px solid var(--blue);}
+.cmp-tabla th.c-m{border-bottom:3px solid var(--purple);}
+.cmp-tabla th.c-f{border-bottom:3px solid var(--amber);}
+
+footer{max-width:1100px; margin:0 auto; padding:0 clamp(16px,4vw,48px) 50px; color:var(--ink-soft); font-size:.78rem;}
+</style>
+</head>
+<body>
+
+<input type="radio" name="tabs" id="tab-a" class="tab-radio" checked>
+<input type="radio" name="tabs" id="tab-c" class="tab-radio">
+
+<div class="topbar">
+  <div class="marca">MegaMarket SAS<span>Sprint 3 — Algoritmo genético + Teoría de juegos</span></div>
+  <div class="tabs">
+    <label for="tab-a">A — Qué lanzar</label>
+    <label for="tab-c">B — Competidor (Minimax)</label>
+  </div>
+</div>
+
+<main>
+
+  <!-- ======================= PARTE A ======================= -->
+  <section class="parte" id="parteA">
+    <div class="hero">
+      <h1>¿Cuáles productos lanzamos con el presupuesto que hay?</h1>
+      <p class="lede">Las referencias ya pasaron los criterios del sistema experto de portafolio (Sprint 2), pero no caben todas al mismo tiempo en el presupuesto ni en la bodega. El algoritmo genético decide cuáles lanzar.</p>
+    </div>
+
+    <section class="bloque">
+      <h2>1. Los candidatos y las restricciones</h2>
+      <p class="explicacion">Puede agregar, quitar o modificar productos (mínimo 5, máximo 50). Ajuste también el presupuesto y el espacio de bodega.</p>
+
+      <div class="productos-editor-wrap">
+        <table class="productos-editor" id="productos-editor">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Producto</th>
+              <th>Costo lanzamiento ($)</th>
+              <th>Espacio bodega</th>
+              <th>Utilidad anual ($)</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="productos-tbody"></tbody>
+        </table>
+      </div>
+      <div class="editor-footer">
+        <button class="btn" id="btn-add-producto">+ Agregar producto</button>
+        <span class="contador-productos" id="contador-productos">8 de 50 productos</span>
+      </div>
+
+      <div class="restricciones-panel">
+        <div class="restriccion-fila">
+          <label for="input-presupuesto">Presupuesto de lanzamiento</label>
+          <input type="range" id="input-presupuesto" min="5000000" max="500000000" step="1000000" value="70000000">
+          <span class="valor" id="valor-presupuesto">$70.000.000</span>
+        </div>
+        <div class="uso-barra" id="barra-presupuesto"><div style="width:0%"></div></div>
+
+        <div class="restriccion-fila" style="margin-top:16px;">
+          <label for="input-espacio">Espacio de bodega</label>
+          <input type="range" id="input-espacio" min="1" max="200" step="1" value="25">
+          <span class="valor" id="valor-espacio">25 posiciones</span>
+        </div>
+        <div class="uso-barra" id="barra-espacio"><div style="width:0%"></div></div>
+      </div>
+    </section>
+
+    <section class="bloque">
+      <h2>2. Cómo piensa el algoritmo</h2>
+      <div class="ciclo-grid">
+        <div class="ciclo-caja"><h3>1. Población</h3><p>Portafolios al azar, ya reparados para caber en presupuesto y espacio.</p></div>
+        <div class="ciclo-caja"><h3>2. Fitness</h3><p>La utilidad esperada total de cada portafolio.</p></div>
+        <div class="ciclo-caja"><h3>3. Selección</h3><p>Ruleta: más fitness, más probabilidad de ser padre.</p></div>
+        <div class="ciclo-caja"><h3>4. Cruce</h3><p>Un corte combina los genes de dos padres.</p></div>
+        <div class="ciclo-caja"><h3>5. Reparación</h3><p>Se retira el producto con peor utilidad/costo si se excede.</p></div>
+        <div class="ciclo-caja"><h3>6. Mutación</h3><p>10% de probabilidad de voltear un gen al azar.</p></div>
+        <div class="ciclo-caja"><h3>7. Elitismo</h3><p>El mejor portafolio pasa directo a la siguiente generación.</p></div>
+      </div>
+    </section>
+
+    <section class="bloque">
+      <h2>3. Ver el algoritmo evolucionando</h2>
+      <div class="param-grid">
+        <div class="param-item">
+          <label>Tamaño de población</label>
+          <input type="number" id="param-a-pop" value="30" min="5" max="200">
+        </div>
+        <div class="param-item">
+          <label>Generaciones</label>
+          <input type="number" id="param-a-gen" value="40" min="5" max="500">
+        </div>
+        <div class="param-item">
+          <label>Probabilidad de mutación</label>
+          <input type="number" id="param-a-mut" value="0.10" min="0.01" max="0.50" step="0.01">
+        </div>
+        <div class="param-item">
+          <label>Elitismo</label>
+          <input type="number" id="param-a-elite" value="1" min="1" max="10">
+        </div>
+      </div>
+      <button class="btn btn-primario" id="btn-correr-ag">Ejecutar algoritmo genético</button>
+
+      <div class="panel-resultado" id="panel-resultado-ag" hidden>
+        <div class="control-generacion">
+          <input type="range" id="slider-gen-ag" min="0" max="15" value="0" step="1">
+          <span class="etiqueta-gen" id="etiqueta-gen-ag">Generación 0 de 15</span>
+        </div>
+
+        <div class="cromosoma-grid" id="cromosoma-grid"></div>
+        <div class="chips-incluidos" id="chips-incluidos"></div>
+
+        <div class="stats-actuales">
+          <div class="stat-grande"><strong id="stat-costo">—</strong><span>Costo usado</span></div>
+          <div class="stat-grande"><strong id="stat-espacio">—</strong><span>Espacio usado</span></div>
+          <div class="stat-grande"><strong id="stat-utilidad">—</strong><span>Utilidad anual</span><div id="stat-utilidad-delta" style="margin-top:6px;"></div></div>
+        </div>
+
+        <div class="grafico-wrap">
+          <svg class="grafico" id="grafico-ag" viewBox="0 0 640 220" preserveAspectRatio="xMinYMin meet"></svg>
+        </div>
+        <div class="leyenda-grafico">
+          <span><i style="background:var(--blue)"></i>Mejor utilidad</span>
+          <span><i style="background:var(--ink-soft)"></i>Utilidad promedio</span>
+          <span><i style="background:var(--ink-soft);height:8px;border-radius:1px;"></i>Generación actual</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="bloque" id="resultado-final-ag" hidden>
+      <h2>4. ¿El algoritmo encontró lo mejor posible?</h2>
+      <p class="explicacion" id="explicacion-fb-a"></p>
+      <div class="metricas-grid" id="metricas-ag"></div>
+      <div id="comparacion-ag-wrap"></div>
+      <div class="nota-empate" id="nota-empate-ag" hidden></div>
+    </section>
+  </section>
+
+  <!-- ======================= PARTE C ======================= -->
+  <section class="parte" id="parteC">
+    <div class="hero">
+      <h1>¿Qué pasa si un competidor reacciona?</h1>
+      <p class="lede">El portafolio de la Parte A supone que nadie compite. Acá se agrega un rival que puede entrar con un producto parecido y quitarnos parte de las ventas. El algoritmo genético ahora busca el portafolio que más resiste el peor caso (Minimax).</p>
+    </div>
+
+    <div class="banner-conexion" id="banner-conexion-c">
+      Cargando el resultado de la Parte A…
+    </div>
+
+    <section class="bloque">
+      <h2>1. Supuestos de erosión por producto</h2>
+      <p class="explicacion"><strong>Erosión</strong> = fracción de la utilidad que se pierde si el rival entra con un producto parecido. Productos más fáciles de copiar tienen erosión alta. Modifique los valores para ver cómo cambia el resultado.</p>
+      <div class="erosion-grid" id="erosion-grid"></div>
+      <div class="restricciones-panel">
+        <div class="restriccion-fila">
+          <label for="input-k-ataques">Ataques simultáneos del rival</label>
+          <input type="range" id="input-k-ataques" min="1" max="8" step="1" value="1">
+          <span class="valor" id="valor-k-ataques">1 producto</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="bloque">
+      <h2>2. Juego de un solo producto (matriz de pagos)</h2>
+      <p class="explicacion">Seleccione un producto y ajuste los pagos del rival para ver la matriz 2x2 (Lanzar/No lanzar vs Entrar/No entrar), el equilibrio de Nash y la solución secuencial.</p>
+      <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end; margin-bottom:16px;">
+        <div class="param-item">
+          <label>Producto</label>
+          <select class="select-prod" id="select-producto-matriz"></select>
+        </div>
+        <div class="param-item">
+          <label>Pago rival si entra vs lanzado ($M)</label>
+          <input class="input-num" type="number" id="input-rival-lanza" value="6" step="0.5">
+        </div>
+        <div class="param-item">
+          <label>Pago rival si entra vs no lanzado ($M)</label>
+          <input class="input-num" type="number" id="input-rival-no-lanza" value="18" step="0.5">
+        </div>
+        <button class="btn" id="btn-calcular-matriz" style="height:38px;">Calcular</button>
+      </div>
+      <div class="matriz-wrap" id="matriz-wrap"></div>
+      <div id="resultado-matriz" style="font-size:.88rem; color:var(--ink-soft); margin-top:8px;"></div>
+    </section>
+
+    <section class="bloque">
+      <h2>3. AG con fitness Minimax — el portafolio más robusto</h2>
+      <p class="explicacion">El AG busca el portafolio que maximiza la utilidad en el peor caso: la utilidad total menos la pérdida máxima que puede causar el rival atacando <span id="k-text-inline">1</span> producto(s).</p>
+      <div class="param-grid">
+        <div class="param-item">
+          <label>Tamaño de población</label>
+          <input type="number" id="param-c-pop" value="30" min="5" max="200">
+        </div>
+        <div class="param-item">
+          <label>Generaciones</label>
+          <input type="number" id="param-c-gen" value="40" min="5" max="500">
+        </div>
+        <div class="param-item">
+          <label>Probabilidad de mutación</label>
+          <input type="number" id="param-c-mut" value="0.10" min="0.01" max="0.50" step="0.01">
+        </div>
+        <div class="param-item">
+          <label>Elitismo</label>
+          <input type="number" id="param-c-elite" value="1" min="1" max="10">
+        </div>
+      </div>
+      <button class="btn btn-primario" id="btn-correr-minimax">Ejecutar AG Minimax</button>
+
+      <div class="panel-resultado" id="panel-resultado-minimax" hidden>
+        <div class="control-generacion">
+          <input type="range" id="slider-gen-minimax" min="0" max="40" value="0" step="1">
+          <span class="etiqueta-gen" id="etiqueta-gen-minimax">Generación 0 de 40</span>
+        </div>
+        <div class="cromosoma-grid" id="cromosoma-grid-c"></div>
+        <div class="chips-incluidos" id="chips-incluidos-c"></div>
+        <div class="stats-actuales">
+          <div class="stat-grande"><strong id="stat-c-costo">—</strong><span>Costo usado</span></div>
+          <div class="stat-grande"><strong id="stat-c-espacio">—</strong><span>Espacio usado</span></div>
+          <div class="stat-grande"><strong id="stat-c-esperada">—</strong><span>Utilidad esperada</span><div id="stat-c-esperada-delta" style="margin-top:6px;"></div></div>
+          <div class="stat-grande"><strong id="stat-c-peor">—</strong><span>Peor caso (Minimax)</span><div id="stat-c-peor-delta" style="margin-top:6px;"></div></div>
+        </div>
+        <div class="arbol-minimax" id="arbol-minimax"></div>
+        <div class="grafico-wrap">
+          <svg class="grafico" id="grafico-minimax" viewBox="0 0 640 220" preserveAspectRatio="xMinYMin meet"></svg>
+        </div>
+        <div class="leyenda-grafico">
+          <span><i style="background:var(--purple)"></i>Mejor peor caso</span>
+          <span><i style="background:var(--ink-soft)"></i>Peor caso promedio</span>
+          <span><i style="background:var(--ink-soft);height:8px;border-radius:1px;"></i>Generación actual</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="bloque" id="resultado-final-minimax" hidden>
+      <h2>4. Comparación: Parte A vs Minimax vs Fuerza bruta</h2>
+      <div id="comparacion-minimax-grid"></div>
+      <div class="metricas-grid" id="metricas-minimax"></div>
+      <div id="lectura-minimax"></div>
+      <div class="cmp-wrap" id="tabla-cmp-wrap"></div>
+      <div class="nota-empate" id="nota-minimax" hidden></div>
+      <div id="scatter-section" hidden>
+        <h3 style="margin-top:24px;">Todos los portafolios válidos: utilidad esperada vs peor caso</h3>
+        <div class="grafico-wrap">
+          <svg class="grafico" id="scatter-portafolios" viewBox="0 0 640 380" preserveAspectRatio="xMinYMin meet"></svg>
+        </div>
+        <div class="leyenda-grafico">
+          <span><i style="background:var(--ink-soft);opacity:.45;height:8px;border-radius:50%;"></i>Otros portafolios</span>
+          <span><i style="background:var(--blue);height:8px;border-radius:50%;"></i>Parte A</span>
+          <span><i style="background:var(--purple);height:8px;border-radius:50%;"></i>AG Minimax</span>
+          <span><i style="background:var(--amber);height:8px;border-radius:50%;"></i>Fuerza bruta</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="bloque" id="sensibilidad-minimax" hidden>
+      <h2>5. Sensibilidad: ¿qué pasa si la erosión cambia?</h2>
+      <p class="explicacion">La erosión es un supuesto. Acá se multiplica por un factor (0.5 = rival débil, 1.5 = rival fuerte) y se mira si el portafolio óptimo cambia.</p>
+      <div id="tabla-sensibilidad-wrap"></div>
+    </section>
+  </section>
+
+</main>
+
+<footer>Costos, espacios, utilidades y erosiones ficticios — construidos para mostrar la lógica de cada algoritmo y cómo se encadenan, no cifras reales de MegaMarket.</footer>
+
+<script>
+// =============================================================================
+// DATOS COMPARTIDOS — PRODUCTOS EDITABLES
+// =============================================================================
+const MIN_PRODUCTOS = 5;
+const MAX_PRODUCTOS = 50;
+const MAX_FUERZA_BRUTA = 20;
+
+let productos = [
+  { nombre: "Higo Deshidratado",  costo: 18000000, espacio: 6,  utilidad: 32000000, erosion: 0.30 },
+  { nombre: "Mix de Frutos Secos", costo: 25000000, espacio: 8,  utilidad: 48000000, erosion: 0.50 },
+  { nombre: "Barra Energética",   costo: 15000000, espacio: 4,  utilidad: 22000000, erosion: 0.40 },
+  { nombre: "Granola",            costo: 20000000, espacio: 7,  utilidad: 30000000, erosion: 0.40 },
+  { nombre: "Jugo Natural",       costo: 30000000, espacio: 10, utilidad: 52000000, erosion: 0.60 },
+  { nombre: "Snack de Plátano",   costo: 12000000, espacio: 5,  utilidad: 17000000, erosion: 0.30 },
+  { nombre: "Compota",            costo: 10000000, espacio: 3,  utilidad: 14000000, erosion: 0.20 },
+  { nombre: "Café Molido",        costo: 22000000, espacio: 6,  utilidad: 38000000, erosion: 0.50 },
+];
+
+const formatoCOP = (v) => "$" + Math.round(v).toLocaleString("es-CO");
+const estado = { mejorPortafolio: null };
+
+function nGenes() { return productos.length; }
+
+// =============================================================================
+// FUNCIONES GENÉRICAS DE PORTAFOLIO
+// =============================================================================
+function costoTotal(ind) { return ind.reduce((s, g, i) => s + (g && i < productos.length ? productos[i].costo : 0), 0); }
+function espacioTotal(ind) { return ind.reduce((s, g, i) => s + (g && i < productos.length ? productos[i].espacio : 0), 0); }
+function utilidadTotal(ind) { return ind.reduce((s, g, i) => s + (g && i < productos.length ? productos[i].utilidad : 0), 0); }
+function esValido(ind, pres, esp) { return costoTotal(ind) <= pres && espacioTotal(ind) <= esp; }
+function nombresIncluidos(ind) { return ind.map((g, i) => g && i < productos.length ? productos[i].nombre : null).filter(Boolean); }
+
+// =============================================================================
+// PARTE A — ALGORITMO GENÉTICO (selección de productos)
+// =============================================================================
+function reparar(ind, pres, esp) {
+  const r = ind.slice();
+  while (!esValido(r, pres, esp)) {
+    const inc = r.map((g, i) => (g ? i : -1)).filter(i => i >= 0);
+    if (inc.length === 0) break;
+    let peor = inc[0];
+    for (const i of inc) { if (productos[i].utilidad / productos[i].costo < productos[peor].utilidad / productos[peor].costo) peor = i; }
+    r[peor] = 0;
+  }
+  return r;
+}
+
+function crearIndividuo(pres, esp) {
+  const n = nGenes();
+  return reparar(Array.from({ length: n }, () => Math.random() < 0.5 ? 1 : 0), pres, esp);
+}
+
+function selRuleta(pob) {
+  const vals = pob.map(ind => utilidadTotal(ind));
+  const base = Math.min(...vals);
+  const pesos = vals.map(v => (v - base) / 1e6 + 1);
+  const total = pesos.reduce((a, b) => a + b, 0);
+  let r = Math.random() * total;
+  for (let i = 0; i < pob.length; i++) { r -= pesos[i]; if (r <= 0) return pob[i]; }
+  return pob[pob.length - 1];
+}
+
+function correrAG(pres, esp, tamPob, gens, probMut, elite) {
+  const n = nGenes();
+  let pob = Array.from({ length: tamPob }, () => crearIndividuo(pres, esp));
+  const hist = [];
+  for (let gen = 0; gen <= gens; gen++) {
+    pob.sort((a, b) => utilidadTotal(b) - utilidadTotal(a));
+    hist.push({ gen, mejor: pob[0].slice(), mejorUtilidad: utilidadTotal(pob[0]),
+      utilidadProm: pob.reduce((s, i) => s + utilidadTotal(i), 0) / pob.length });
+    if (gen === gens) break;
+    const nueva = pob.slice(0, elite).map(i => i.slice());
+    while (nueva.length < tamPob) {
+      const p1 = selRuleta(pob), p2 = selRuleta(pob);
+      const corte = 1 + Math.floor(Math.random() * (n - 1));
+      let hijo = reparar(p1.slice(0, corte).concat(p2.slice(corte)), pres, esp);
+      if (Math.random() < probMut) {
+        const pos = Math.floor(Math.random() * n);
+        hijo[pos] = hijo[pos] ? 0 : 1;
+        hijo = reparar(hijo, pres, esp);
+      }
+      nueva.push(hijo);
+    }
+    pob = nueva;
+  }
+  return hist;
+}
+
+function fuerzaBruta(pres, esp) {
+  const n = nGenes();
+  if (n > MAX_FUERZA_BRUTA) return null;
+  let mejor = null, mu = -1;
+  const total = 1 << n;
+  for (let m = 0; m < total; m++) {
+    const ind = Array.from({ length: n }, (_, i) => (m >> i) & 1);
+    if (esValido(ind, pres, esp)) { const u = utilidadTotal(ind); if (u > mu) { mu = u; mejor = ind; } }
+  }
+  return { mejor, mejorUtilidad: mu };
+}
+
+// =============================================================================
+// PARTE C — TEORÍA DE JUEGOS + AG MINIMAX
+// =============================================================================
+function getErosiones() {
+  return productos.map((p, i) => {
+    const el = document.getElementById("erosion-" + i);
+    return el ? Number(el.value) : p.erosion;
+  });
+}
+function getKAtaques() { return Number(document.getElementById("input-k-ataques").value); }
+
+function perdidaPorAtaque(ind, erosiones) {
+  const p = [];
+  for (let i = 0; i < ind.length && i < productos.length; i++) {
+    if (ind[i]) p.push({ idx: i, perdida: productos[i].utilidad * erosiones[i] });
+  }
+  return p;
+}
+
+function perdidaMaxima(ind, erosiones, k) {
+  const p = perdidaPorAtaque(ind, erosiones).sort((a, b) => b.perdida - a.perdida);
+  let s = 0; for (let i = 0; i < Math.min(k, p.length); i++) s += p[i].perdida;
+  return s;
+}
+
+function utilidadPeorCaso(ind, erosiones, k) { return utilidadTotal(ind) - perdidaMaxima(ind, erosiones, k); }
+function fitnessMinimax(ind, erosiones, k) { return utilidadPeorCaso(ind, erosiones, k) + 0.001 * utilidadTotal(ind); }
+
+function razonMinimax(i, erosiones) {
+  return productos[i].utilidad * (1 - erosiones[i]) / productos[i].costo;
+}
+
+function repararMinimax(ind, pres, esp, erosiones) {
+  const r = ind.slice();
+  while (!esValido(r, pres, esp)) {
+    const inc = r.map((g, i) => (g ? i : -1)).filter(i => i >= 0);
+    if (inc.length === 0) break;
+    let peor = inc[0];
+    for (const i of inc) { if (razonMinimax(i, erosiones) < razonMinimax(peor, erosiones)) peor = i; }
+    r[peor] = 0;
+  }
+  return r;
+}
+
+function selRuletaMinimax(pob, erosiones, k) {
+  const vals = pob.map(ind => fitnessMinimax(ind, erosiones, k));
+  const base = Math.min(...vals);
+  const pesos = vals.map(v => (v - base) / 1e6 + 1);
+  const total = pesos.reduce((a, b) => a + b, 0);
+  let r = Math.random() * total;
+  for (let i = 0; i < pob.length; i++) { r -= pesos[i]; if (r <= 0) return pob[i]; }
+  return pob[pob.length - 1];
+}
+
+function correrAGMinimax(pres, esp, erosiones, k, tamPob, gens, probMut, elite) {
+  const n = nGenes();
+  let pob = Array.from({ length: tamPob }, () =>
+    repararMinimax(Array.from({ length: n }, () => Math.random() < 0.5 ? 1 : 0), pres, esp, erosiones));
+  const hist = [];
+  for (let gen = 0; gen <= gens; gen++) {
+    pob.sort((a, b) => fitnessMinimax(b, erosiones, k) - fitnessMinimax(a, erosiones, k));
+    const mejor = pob[0];
+    hist.push({ gen, mejor: mejor.slice(),
+      mejorEsperada: utilidadTotal(mejor), mejorPeorCaso: utilidadPeorCaso(mejor, erosiones, k),
+      peorCasoProm: pob.reduce((s, ind) => s + utilidadPeorCaso(ind, erosiones, k), 0) / pob.length });
+    if (gen === gens) break;
+    const nueva = pob.slice(0, elite).map(i => i.slice());
+    while (nueva.length < tamPob) {
+      const p1 = selRuletaMinimax(pob, erosiones, k), p2 = selRuletaMinimax(pob, erosiones, k);
+      const corte = 1 + Math.floor(Math.random() * (n - 1));
+      let hijo = repararMinimax(p1.slice(0, corte).concat(p2.slice(corte)), pres, esp, erosiones);
+      if (Math.random() < probMut) {
+        const pos = Math.floor(Math.random() * n);
+        hijo[pos] = hijo[pos] ? 0 : 1;
+        hijo = repararMinimax(hijo, pres, esp, erosiones);
+      }
+      nueva.push(hijo);
+    }
+    pob = nueva;
+  }
+  return hist;
+}
+
+function fuerzaBrutaMinimax(pres, esp, erosiones, k) {
+  const n = nGenes();
+  if (n > MAX_FUERZA_BRUTA) return null;
+  let mejor = null, mu = -Infinity;
+  const validas = [];
+  const total = 1 << n;
+  for (let m = 0; m < total; m++) {
+    const ind = Array.from({ length: n }, (_, i) => (m >> i) & 1);
+    if (esValido(ind, pres, esp)) {
+      validas.push(ind);
+      const v = utilidadPeorCaso(ind, erosiones, k);
+      if (v > mu + 1e-6) { mu = v; mejor = [ind]; }
+      else if (Math.abs(v - mu) < 1e-6) { mejor.push(ind); }
+    }
+  }
+  return { mejores: mejor || [], mejorValor: mu, validas };
+}
+
+// Matriz 2x2
+function matrizProducto(idx, erosion, rivalLanza, rivalNoLanza) {
+  const c = productos[idx];
+  const u = c.utilidad, costo = c.costo;
+  return { A: [[u * (1 - erosion) - costo, u - costo], [0, 0]], B: [[rivalLanza, 0], [rivalNoLanza, 0]] };
+}
+
+function nashPuro(A, B) {
+  const nash = [];
+  for (let i = 0; i < 2; i++) for (let j = 0; j < 2; j++) {
+    if (A[i][j] >= Math.max(A[0][j], A[1][j]) - 1e-9 && B[i][j] >= Math.max(B[i][0], B[i][1]) - 1e-9) nash.push([i, j]);
+  }
+  return nash;
+}
+
+function solucionSecuencial(A, B) {
+  const resp = [B[0][0] >= B[0][1] ? 0 : 1, B[1][0] >= B[1][1] ? 0 : 1];
+  const i = A[0][resp[0]] >= A[1][resp[1]] ? 0 : 1;
+  return [i, resp[i]];
+}
+
+// =============================================================================
+// DIBUJO COMPARTIDO
+// =============================================================================
+
+// =============================================================================
+// MÉTRICAS DE MEJORA / EMPEORAMIENTO
+// =============================================================================
+const pct1 = (x) => (x * 100).toFixed(1).replace(".", ",") + "%";
+
+function badgeRaw(d, esMejor, texto) {
+  const cls = Math.abs(d) < 1e-9 ? "flat" : (esMejor ? "up" : "down");
+  const flecha = Math.abs(d) < 1e-9 ? "=" : (d > 0 ? "▲" : "▼");
+  return `<span class="delta ${cls}">${flecha} ${texto}</span>`;
+}
+
+// Diferencia en pesos y en % frente a una base. menorMejor=true si bajar es bueno (costos, pérdidas).
+function deltaBadge(nuevo, base, menorMejor) {
+  const d = nuevo - base;
+  if (Math.abs(d) < 1) return `<span class="delta flat">= sin cambio</span>`;
+  const mejor = menorMejor ? d < 0 : d > 0;
+  const signo = d > 0 ? "+" : "−";
+  const pct = base !== 0 ? ` (${signo}${(Math.abs(d) / Math.abs(base) * 100).toFixed(1).replace(".", ",")}%)` : "";
+  return badgeRaw(d, mejor, `${signo}${formatoCOP(Math.abs(d))}${pct}`);
+}
+
+function deltaPts(nuevo, base, menorMejor) {
+  const d = (nuevo - base) * 100;
+  if (Math.abs(d) < 0.05) return `<span class="delta flat">= sin cambio</span>`;
+  const mejor = menorMejor ? d < 0 : d > 0;
+  return badgeRaw(d, mejor, `${d > 0 ? "+" : "−"}${Math.abs(d).toFixed(1).replace(".", ",")} pts`);
+}
+
+function metricaHTML(label, valor, badge, nota, destacada, chico) {
+  return `<div class="metrica${destacada ? " destacada" : ""}"><div class="m-label">${label}</div>` +
+    `<div class="m-valor${chico ? " chico" : ""}">${valor}</div>${badge ? `<div>${badge}</div>` : ""}` +
+    `${nota ? `<div class="m-nota">${nota}</div>` : ""}</div>`;
+}
+
+function renderMetricasAG(p, e, fb) {
+  const h = historialAG, ini = h[0], fin = h[h.length - 1];
+  const genConv = h.findIndex(x => x.mejorUtilidad === fin.mejorUtilidad);
+  const costo = costoTotal(fin.mejor), esp = espacioTotal(fin.mejor);
+  let c = "";
+  c += metricaHTML("Mejora del mejor portafolio", formatoCOP(fin.mejorUtilidad),
+    deltaBadge(fin.mejorUtilidad, ini.mejorUtilidad), `Generación 0: ${formatoCOP(ini.mejorUtilidad)}`, true);
+  c += metricaHTML("Mejora de la población (promedio)", formatoCOP(fin.utilidadProm),
+    deltaBadge(fin.utilidadProm, ini.utilidadProm), `Generación 0: ${formatoCOP(ini.utilidadProm)}`);
+  c += metricaHTML("Convergencia", `Generación ${genConv}`, "",
+    `El mejor valor se alcanzó en la generación ${genConv} de ${h.length - 1}.`);
+  if (fb && fb.mejorUtilidad > 0) {
+    const igual = Math.abs(fin.mejorUtilidad - fb.mejorUtilidad) < 1;
+    c += metricaHTML("Cercanía al óptimo (fuerza bruta)", pct1(fin.mejorUtilidad / fb.mejorUtilidad),
+      igual ? `<span class="delta up">✓ Igual al óptimo</span>` : deltaBadge(fin.mejorUtilidad, fb.mejorUtilidad),
+      `Óptimo: ${formatoCOP(fb.mejorUtilidad)}`);
+  }
+  c += metricaHTML("Presupuesto usado", pct1(costo / p), "", `${formatoCOP(costo)} de ${formatoCOP(p)} · Bodega: ${pct1(esp / e)}`);
+  if (costo > 0) {
+    c += metricaHTML("Retorno anual por peso invertido", (fin.mejorUtilidad / costo).toFixed(2).replace(".", ",") + "x", "",
+      `Utilidad neta del primer año: ${formatoCOP(fin.mejorUtilidad - costo)}`);
+  }
+  document.getElementById("metricas-ag").innerHTML = c;
+}
+
+function statsPort(ind, ero, k) {
+  const u = utilidadTotal(ind), pm = perdidaMaxima(ind, ero, k);
+  const atacados = perdidaPorAtaque(ind, ero).sort((a, b) => b.perdida - a.perdida).slice(0, k).map(a => productos[a.idx].nombre);
+  return { u, pm, pw: u - pm, costo: costoTotal(ind), esp: espacioTotal(ind),
+    pctPerdida: u ? pm / u : 0, atacados: atacados.join(", ") || "—", nombres: nombresIncluidos(ind).join(", ") || "—" };
+}
+
+function renderMetricasMinimax(A, mm, fb, ero, k) {
+  const a = statsPort(A, ero, k), m = statsPort(mm, ero, k);
+  const f = fb && fb.mejores.length ? statsPort(fb.mejores[0], ero, k) : null;
+  const ganancia = m.pw - a.pw, sacrificio = a.u - m.u;
+  const mismo = A.length === mm.length && A.every((g, i) => g === mm[i]);
+
+  let c = "";
+  c += metricaHTML("Peor caso (protección)", formatoCOP(m.pw), deltaBadge(m.pw, a.pw),
+    `Parte A: ${formatoCOP(a.pw)}`, true);
+  c += metricaHTML("Utilidad esperada", formatoCOP(m.u), deltaBadge(m.u, a.u),
+    sacrificio > 1 ? "Lo que se cede por protegerse." : "Sin sacrificio frente a la Parte A.");
+  if (mismo) {
+    c += metricaHTML("Eficiencia de la cobertura", "Mismo portafolio", "", "El AG Minimax eligió lo mismo que la Parte A.", false, true);
+  } else if (ganancia > 1 && sacrificio > 1) {
+    c += metricaHTML("Eficiencia de la cobertura", (ganancia / sacrificio).toFixed(1).replace(".", ",") + "x", "",
+      "Pesos de protección ganados por cada peso de utilidad esperada cedido.");
+  } else if (ganancia > 1) {
+    c += metricaHTML("Eficiencia de la cobertura", "Mejora en ambos", "", "Más protección sin ceder utilidad esperada.", false, true);
+  } else {
+    c += metricaHTML("Eficiencia de la cobertura", "Sin ganancia", "", "La Parte A ya es igual de robusta con estos supuestos.", false, true);
+  }
+  c += metricaHTML("Pérdida si el rival ataca", formatoCOP(m.pm), deltaBadge(m.pm, a.pm, true),
+    `Pierde ${pct1(m.pctPerdida)} de su utilidad (Parte A: ${pct1(a.pctPerdida)}).`);
+  if (f && f.pw > 0) {
+    const igual = Math.abs(m.pw - f.pw) < 1;
+    c += metricaHTML("Cercanía al óptimo Minimax", pct1(m.pw / f.pw),
+      igual ? `<span class="delta up">✓ Igual al óptimo</span>` : deltaBadge(m.pw, f.pw), `Óptimo (fuerza bruta): ${formatoCOP(f.pw)}`);
+  }
+  c += metricaHTML("Producto más expuesto", m.atacados, "", `Parte A: ${a.atacados}`, false, true);
+  document.getElementById("metricas-minimax").innerHTML = c;
+
+  // Lectura automática
+  let txt = `<strong>Lectura:</strong> frente a un rival que ataca ${k} producto${k > 1 ? "s" : ""}, el portafolio de la Parte A baja de ${formatoCOP(a.u)} esperados a ${formatoCOP(a.pw)} en el peor caso (pierde ${pct1(a.pctPerdida)}). `;
+  if (mismo) {
+    txt += "El AG Minimax escogió el mismo portafolio: con estos supuestos de erosión, el de la Parte A ya es el más robusto.";
+  } else if (ganancia > 1) {
+    txt += `El portafolio Minimax mejora el peor caso en ${formatoCOP(ganancia)} (${a.pw ? "+" + (ganancia / Math.abs(a.pw) * 100).toFixed(1).replace(".", ",") + "%" : "—"})` +
+      (sacrificio > 1 ? ` a cambio de ceder ${formatoCOP(sacrificio)} de utilidad esperada (${pct1(sacrificio / a.u)}).` : ", sin ceder utilidad esperada.");
+  } else {
+    txt += "El portafolio Minimax no mejora el peor caso frente al de la Parte A.";
+  }
+  document.getElementById("lectura-minimax").innerHTML = `<div class="lectura">${txt}</div>`;
+
+  // Tabla comparativa
+  const filas = [
+    ["Productos", a.nombres, m.nombres, "", f ? f.nombres : null, true],
+    ["Costo de lanzamiento", formatoCOP(a.costo), formatoCOP(m.costo), deltaBadge(m.costo, a.costo, true), f ? formatoCOP(f.costo) : null],
+    ["Utilidad esperada", formatoCOP(a.u), formatoCOP(m.u), deltaBadge(m.u, a.u), f ? formatoCOP(f.u) : null],
+    ["Peor caso (Minimax)", formatoCOP(a.pw), formatoCOP(m.pw), deltaBadge(m.pw, a.pw), f ? formatoCOP(f.pw) : null],
+    ["Pérdida máxima por ataque", formatoCOP(a.pm), formatoCOP(m.pm), deltaBadge(m.pm, a.pm, true), f ? formatoCOP(f.pm) : null],
+    ["% de utilidad que se pierde", pct1(a.pctPerdida), pct1(m.pctPerdida), deltaPts(m.pctPerdida, a.pctPerdida, true), f ? pct1(f.pctPerdida) : null],
+    ["Producto atacado", a.atacados, m.atacados, "", f ? f.atacados : null, true],
+  ];
+  let t = `<h3>Parte A vs AG Minimax${f ? " vs óptimo" : ""} — qué mejora y qué empeora</h3><table class="sensibilidad-tabla cmp-tabla"><tr><th>Métrica</th><th class="c-a">Parte A</th><th class="c-m">AG Minimax</th><th>Cambio (Minimax vs A)</th>${f ? '<th class="c-f">Fuerza bruta</th>' : ""}</tr>`;
+  filas.forEach(r => {
+    const cls = r[5] ? ' class="txt"' : "";
+    t += `<tr><td>${r[0]}</td><td${cls}>${r[1]}</td><td${cls}>${r[2]}</td><td>${r[3]}</td>${f ? `<td${cls}>${r[4]}</td>` : ""}</tr>`;
+  });
+  t += "</table>";
+  document.getElementById("tabla-cmp-wrap").innerHTML = t;
+}
+
+function dibujarLineas(svgEl, series, opciones) {
+  const ancho = 640, alto = opciones.alto || 220;
+  const margen = { top: 14, right: 14, bottom: 26, left: opciones.margenIzq || 54 };
+  const w = ancho - margen.left - margen.right, h = alto - margen.top - margen.bottom;
+  const n = opciones.n;
+  const escalarY = opciones.escala === "log" ? (v) => Math.log10(Math.max(v, opciones.minLog || 1)) : (v) => v;
+  const valoresY = series.flatMap(s => s.valores.map(escalarY));
+  const maxY = Math.max(...valoresY) * (opciones.escala === "log" ? 1.02 : 1.08);
+  const minY = opciones.escala === "log" ? Math.min(...valoresY) * 0.98 : 0;
+  const x = (i) => margen.left + (n === 1 ? 0 : (i / (n - 1)) * w);
+  const y = (v) => margen.top + h - ((escalarY(v) - minY) / (maxY - minY || 1)) * h;
+  let svg = "";
+  for (let p = 0; p <= 4; p++) {
+    const yy = margen.top + h - (p / 4) * h;
+    const vr = opciones.escala === "log" ? Math.pow(10, minY + (p / 4) * (maxY - minY)) : (maxY / 4) * p;
+    svg += `<line x1="${margen.left}" y1="${yy}" x2="${ancho - margen.right}" y2="${yy}" stroke="var(--line)" stroke-width="1"/>`;
+    svg += `<text x="${margen.left - 8}" y="${yy + 3}" font-size="9" fill="var(--ink-soft)" text-anchor="end" font-family="IBM Plex Sans,sans-serif">${opciones.formatoEje ? opciones.formatoEje(vr) : vr.toFixed(0)}</text>`;
+  }
+  const pasoX = Math.ceil(n / 8) || 1;
+  for (let i = 0; i < n; i += pasoX) svg += `<text x="${x(i)}" y="${alto - 6}" font-size="9" fill="var(--ink-soft)" text-anchor="middle" font-family="IBM Plex Sans,sans-serif">${i}</text>`;
+  series.forEach(s => {
+    const pts = s.valores.map((v, i) => `${x(i)},${y(v)}`).join(" ");
+    svg += `<polyline points="${pts}" fill="none" stroke="${s.color}" stroke-width="2.5"/>`;
+  });
+  if (opciones.marcador !== undefined) {
+    const xm = x(opciones.marcador);
+    svg += `<line x1="${xm}" y1="${margen.top}" x2="${xm}" y2="${margen.top + h}" stroke="var(--ink-soft)" stroke-width="2" stroke-dasharray="4 3"/>`;
+    series.forEach(s => { svg += `<circle cx="${xm}" cy="${y(s.valores[opciones.marcador])}" r="4" fill="${s.color}"/>`; });
+  }
+  svgEl.setAttribute("viewBox", `0 0 ${ancho} ${alto}`);
+  svgEl.innerHTML = svg;
+}
+
+// =============================================================================
+// INTERFAZ — EDITOR DE PRODUCTOS
+// =============================================================================
+const tbody = document.getElementById("productos-tbody");
+const btnAdd = document.getElementById("btn-add-producto");
+const contadorProd = document.getElementById("contador-productos");
+
+function leerProductosDesdeTabla() {
+  const rows = tbody.querySelectorAll("tr");
+  const nuevos = [];
+  rows.forEach(row => {
+    const inputs = row.querySelectorAll("input");
+    if (inputs.length >= 4) {
+      nuevos.push({
+        nombre: inputs[0].value.trim() || "Producto",
+        costo: Math.max(1, Number(inputs[1].value) || 1000000),
+        espacio: Math.max(1, Math.round(Number(inputs[2].value) || 1)),
+        utilidad: Math.max(1, Number(inputs[3].value) || 1000000),
+        erosion: productos[nuevos.length] ? productos[nuevos.length].erosion : 0.30,
+      });
+    }
+  });
+  return nuevos;
+}
+
+function sincronizarProductos() {
+  productos = leerProductosDesdeTabla();
+  contadorProd.textContent = `${productos.length} de ${MAX_PRODUCTOS} productos`;
+  btnAdd.disabled = productos.length >= MAX_PRODUCTOS;
+  tbody.querySelectorAll(".btn-remove").forEach(btn => { btn.disabled = productos.length <= MIN_PRODUCTOS; });
+  renderRestricciones();
+  // Reset AG results
+  historialAG = null;
+  estado.mejorPortafolio = null;
+  document.getElementById("panel-resultado-ag").hidden = true;
+  document.getElementById("resultado-final-ag").hidden = true;
+  refAutomatica = false;
+  actualizarBannerC();
+  // Reset Minimax results
+  historialMinimax = null;
+  document.getElementById("panel-resultado-minimax").hidden = true;
+  document.getElementById("resultado-final-minimax").hidden = true;
+  document.getElementById("sensibilidad-minimax").hidden = true;
+}
+
+function renderTablaProductos() {
+  tbody.innerHTML = "";
+  productos.forEach((p, i) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${i + 1}</td>
+      <td><input type="text" value="${p.nombre}" data-field="nombre"></td>
+      <td><input type="number" value="${p.costo}" step="1000000" min="1" data-field="costo"></td>
+      <td><input type="number" value="${p.espacio}" step="1" min="1" data-field="espacio"></td>
+      <td><input type="number" value="${p.utilidad}" step="1000000" min="1" data-field="utilidad"></td>
+      <td><button class="btn-remove" title="Quitar producto">&times;</button></td>`;
+    tr.querySelector(".btn-remove").addEventListener("click", () => {
+      if (productos.length <= MIN_PRODUCTOS) return;
+      productos.splice(i, 1);
+      renderTablaProductos();
+      sincronizarProductos();
+      initErosionGrid();
+      initSelectMatriz();
+    });
+    tr.querySelectorAll("input").forEach(inp => {
+      inp.addEventListener("change", () => { sincronizarProductos(); initErosionGrid(); initSelectMatriz(); });
+    });
+    tbody.appendChild(tr);
+  });
+  contadorProd.textContent = `${productos.length} de ${MAX_PRODUCTOS} productos`;
+  btnAdd.disabled = productos.length >= MAX_PRODUCTOS;
+  tbody.querySelectorAll(".btn-remove").forEach(btn => { btn.disabled = productos.length <= MIN_PRODUCTOS; });
+}
+
+btnAdd.addEventListener("click", () => {
+  if (productos.length >= MAX_PRODUCTOS) return;
+  productos.push({ nombre: "Producto " + (productos.length + 1), costo: 15000000, espacio: 5, utilidad: 25000000, erosion: 0.30 });
+  renderTablaProductos();
+  sincronizarProductos();
+  initErosionGrid();
+  initSelectMatriz();
+});
+
+// =============================================================================
+// INTERFAZ — PARTE A
+// =============================================================================
+const inputPresupuesto = document.getElementById("input-presupuesto");
+const inputEspacio = document.getElementById("input-espacio");
+const valorPresupuesto = document.getElementById("valor-presupuesto");
+const valorEspacio = document.getElementById("valor-espacio");
+const barraPresupuesto = document.getElementById("barra-presupuesto").firstElementChild;
+const barraEspacio = document.getElementById("barra-espacio").firstElementChild;
+let historialAG = null;
+
+function renderRestricciones() {
+  const p = Number(inputPresupuesto.value), e = Number(inputEspacio.value);
+  valorPresupuesto.textContent = formatoCOP(p);
+  valorEspacio.textContent = e + " posiciones";
+  const costoTodos = productos.reduce((s, c) => s + c.costo, 0);
+  const espacioTodos = productos.reduce((s, c) => s + c.espacio, 0);
+  barraPresupuesto.style.width = Math.min(100, (costoTodos / p) * 100) + "%";
+  barraEspacio.style.width = Math.min(100, (espacioTodos / e) * 100) + "%";
+  barraPresupuesto.parentElement.classList.toggle("excedido", costoTodos > p);
+  barraEspacio.parentElement.classList.toggle("excedido", espacioTodos > e);
+}
+
+function renderGeneracionAG(idx) {
+  const f = historialAG[idx];
+  const gens = historialAG.length - 1;
+  document.getElementById("etiqueta-gen-ag").textContent = `Generación ${f.gen} de ${gens}`;
+  const cGrid = document.getElementById("cromosoma-grid");
+  const cChips = document.getElementById("chips-incluidos");
+  cGrid.innerHTML = ""; cChips.innerHTML = "";
+  f.mejor.forEach((g, i) => {
+    if (i >= productos.length) return;
+    const c = document.createElement("div"); c.className = "gen-celda" + (g ? " activo" : ""); c.textContent = g; c.title = productos[i].nombre; cGrid.appendChild(c);
+    if (g) { const ch = document.createElement("span"); ch.className = "chip"; ch.textContent = productos[i].nombre; cChips.appendChild(ch); }
+  });
+  if (!cChips.innerHTML) cChips.innerHTML = '<span class="chip" style="background:var(--line);color:var(--ink-soft);">Ningún producto</span>';
+  const p = Number(inputPresupuesto.value), e = Number(inputEspacio.value);
+  document.getElementById("stat-costo").textContent = formatoCOP(costoTotal(f.mejor));
+  document.getElementById("stat-costo").parentElement.classList.toggle("excedido", costoTotal(f.mejor) > p);
+  document.getElementById("stat-espacio").textContent = espacioTotal(f.mejor) + " / " + e;
+  document.getElementById("stat-espacio").parentElement.classList.toggle("excedido", espacioTotal(f.mejor) > e);
+  document.getElementById("stat-utilidad").textContent = formatoCOP(f.mejorUtilidad);
+  document.getElementById("stat-utilidad-delta").innerHTML = idx === 0
+    ? '<span class="delta flat">punto de partida</span>'
+    : deltaBadge(f.mejorUtilidad, historialAG[0].mejorUtilidad) + ' <span style="font-size:.7rem;color:var(--ink-soft);">vs gen. 0</span>';
+  dibujarLineas(document.getElementById("grafico-ag"),
+    [{ valores: historialAG.map(f => f.mejorUtilidad), color: "var(--blue)" }, { valores: historialAG.map(f => f.utilidadProm), color: "var(--ink-soft)" }],
+    { n: historialAG.length, marcador: idx, formatoEje: v => (v / 1e6).toFixed(0) + "M" });
+}
+
+function renderResultadoFinalAG(p, e) {
+  const mejorAg = historialAG[historialAG.length - 1];
+  const n = nGenes();
+  const fbA = n <= MAX_FUERZA_BRUTA ? fuerzaBruta(p, e) : null;
+  renderMetricasAG(p, e, fbA);
+  const listaP = ind => { const ns = nombresIncluidos(ind); return ns.length ? "<ul>" + ns.map(x => `<li>${x}</li>`).join("") + "</ul>" : "<p>Ninguno</p>"; };
+  const explicacion = document.getElementById("explicacion-fb-a");
+  const wrap = document.getElementById("comparacion-ag-wrap");
+
+  if (n <= MAX_FUERZA_BRUTA) {
+    const fb = fbA;
+    explicacion.textContent = `Con ${n} candidatos hay 2^${n} = ${(1 << n).toLocaleString("es-CO")} combinaciones — pocas para revisarlas todas y comprobar si el AG llegó a la mejor.`;
+    wrap.innerHTML = `<div class="comparacion-grid">
+      <div class="resultado-caja"><h3>Algoritmo genético</h3>${listaP(mejorAg.mejor)}<p><strong>${formatoCOP(mejorAg.mejorUtilidad)}</strong> de utilidad anual</p></div>
+      <div class="resultado-caja fb"><h3>Fuerza bruta (control)</h3>${fb ? listaP(fb.mejor) + `<p><strong>${formatoCOP(fb.mejorUtilidad)}</strong> de utilidad anual</p>` : "<p>—</p>"}</div>
+    </div>`;
+    const nota = document.getElementById("nota-empate-ag");
+    nota.hidden = false;
+    if (fb && mejorAg.mejorUtilidad === fb.mejorUtilidad) {
+      nota.textContent = "El AG llegó al óptimo global — confirmado por fuerza bruta.";
+    } else if (fb) {
+      nota.textContent = "El AG no llegó al óptimo esta corrida — puede volver a ejecutarlo o aumentar generaciones/población.";
+    }
+  } else {
+    explicacion.textContent = `Con ${n} candidatos hay 2^${n} combinaciones — la fuerza bruta no es viable. El AG es la única herramienta práctica.`;
+    wrap.innerHTML = `<div class="comparacion-grid" style="grid-template-columns:1fr;">
+      <div class="resultado-caja"><h3>Algoritmo genético</h3>${listaP(mejorAg.mejor)}<p><strong>${formatoCOP(mejorAg.mejorUtilidad)}</strong> de utilidad anual</p></div>
+    </div>`;
+    const nota = document.getElementById("nota-empate-ag");
+    nota.hidden = false;
+    nota.textContent = `Con ${n} productos no se puede hacer fuerza bruta (2^${n} combinaciones). Si quiere validar el resultado, ejecute el AG varias veces y compare.`;
+  }
+  document.getElementById("resultado-final-ag").hidden = false;
+}
+
+function ejecutarAG() {
+  refAutomatica = false;
+  const p = Number(inputPresupuesto.value), e = Number(inputEspacio.value);
+  const tamPob = Number(document.getElementById("param-a-pop").value);
+  const gens = Number(document.getElementById("param-a-gen").value);
+  const probMut = Number(document.getElementById("param-a-mut").value);
+  const elite = Number(document.getElementById("param-a-elite").value);
+  historialAG = correrAG(p, e, tamPob, gens, probMut, elite);
+  estado.mejorPortafolio = historialAG[historialAG.length - 1].mejor;
+  const slider = document.getElementById("slider-gen-ag");
+  slider.max = String(historialAG.length - 1); slider.value = "0";
+  document.getElementById("panel-resultado-ag").hidden = false;
+  renderGeneracionAG(0);
+  renderResultadoFinalAG(p, e);
+  actualizarBannerC();
+}
+
+document.getElementById("btn-correr-ag").addEventListener("click", () => {
+  ejecutarAG();
+  document.getElementById("panel-resultado-ag").scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+document.getElementById("slider-gen-ag").addEventListener("input", () => {
+  if (historialAG) renderGeneracionAG(Number(document.getElementById("slider-gen-ag").value));
+});
+[inputPresupuesto, inputEspacio].forEach(inp => inp.addEventListener("input", renderRestricciones));
+
+// =============================================================================
+// INTERFAZ — PARTE C
+// =============================================================================
+const inputKAtaques = document.getElementById("input-k-ataques");
+const valorKAtaques = document.getElementById("valor-k-ataques");
+let historialMinimax = null;
+let refAutomatica = false;
+
+function actualizarBannerC() {
+  const banner = document.getElementById("banner-conexion-c");
+  if (!estado.mejorPortafolio) { banner.innerHTML = "Todavía no se ha ejecutado el AG de la Parte A. El AG Minimax usa los mismos productos y restricciones."; return; }
+  const nombres = nombresIncluidos(estado.mejorPortafolio);
+  banner.innerHTML = `<strong>Portafolio de la Parte A</strong> — se usa como referencia de comparación${refAutomatica ? " (calculado automáticamente con los parámetros por defecto)" : ""}:<div class="chips-conexion">${nombres.map(n => `<span class="chip-b">${n}</span>`).join("")}</div>`;
+}
+
+// C.1 — Erosion sliders
+function initErosionGrid() {
+  const grid = document.getElementById("erosion-grid");
+  grid.innerHTML = "";
+  productos.forEach((p, i) => {
+    const item = document.createElement("div"); item.className = "erosion-item";
+    item.innerHTML = `<label>${p.nombre}</label><div class="slider-row"><input type="range" id="erosion-${i}" min="0" max="0.95" step="0.05" value="${p.erosion}"><span class="erosion-val" id="erosion-val-${i}">${Math.round(p.erosion * 100)}%</span></div>`;
+    grid.appendChild(item);
+    item.querySelector("input").addEventListener("input", () => {
+      const val = Number(document.getElementById("erosion-" + i).value);
+      document.getElementById("erosion-val-" + i).textContent = Math.round(val * 100) + "%";
+      productos[i].erosion = val;
+    });
+  });
+}
+
+inputKAtaques.addEventListener("input", () => {
+  const k = Number(inputKAtaques.value);
+  valorKAtaques.textContent = k + " producto" + (k > 1 ? "s" : "");
+  const el = document.getElementById("k-text-inline");
+  if (el) el.textContent = k;
+});
+
+// C.2 — Matriz 2x2
+function initSelectMatriz() {
+  const sel = document.getElementById("select-producto-matriz");
+  sel.innerHTML = "";
+  productos.forEach((p, i) => { const o = document.createElement("option"); o.value = i; o.textContent = p.nombre; sel.appendChild(o); });
+  if (productos.length > 0) sel.value = Math.min(4, productos.length - 1);
+}
+
+function calcularMatriz() {
+  const idx = Number(document.getElementById("select-producto-matriz").value);
+  if (idx >= productos.length) return;
+  const erosiones = getErosiones();
+  const ero = erosiones[idx];
+  const rl = Number(document.getElementById("input-rival-lanza").value) * 1e6;
+  const rnl = Number(document.getElementById("input-rival-no-lanza").value) * 1e6;
+  const { A, B } = matrizProducto(idx, ero, rl, rnl);
+  const nash = nashPuro(A, B);
+  const seq = solucionSecuencial(A, B);
+  const filas = ["Lanzar", "No lanzar"], cols = ["Entrar", "No entrar"];
+  const isNash = (i, j) => nash.some(n => n[0] === i && n[1] === j);
+  const isSeq = (i, j) => seq[0] === i && seq[1] === j;
+  let html = '<table class="matriz-tabla"><tr><th></th>';
+  cols.forEach(c => html += `<th>Rival: ${c}</th>`); html += "</tr>";
+  for (let i = 0; i < 2; i++) {
+    html += `<tr><th>Riovalle: ${filas[i]}</th>`;
+    for (let j = 0; j < 2; j++) {
+      const cls = (isNash(i, j) ? " nash-cell" : "") + (isSeq(i, j) ? " seq-cell" : "");
+      html += `<td class="${cls}">(${(A[i][j] / 1e6).toFixed(1)} ; ${(B[i][j] / 1e6).toFixed(1)})${isNash(i, j) ? " ← Nash" : ""}</td>`;
+    }
+    html += "</tr>";
+  }
+  html += "</table>";
+  document.getElementById("matriz-wrap").innerHTML = html;
+  const eqEro = 1 - productos[idx].costo / productos[idx].utilidad;
+  let res = `<strong>Erosión de equilibrio:</strong> ${(eqEro * 100).toFixed(1)}% — erosión actual: ${(ero * 100).toFixed(0)}%. `;
+  res += ero > eqEro ? "⚠️ El producto pierde dinero el primer año si el rival entra." : "✓ El producto sigue siendo rentable aun con la entrada del rival.";
+  res += `<br><strong>Nash puros:</strong> ${nash.map(n => `(${filas[n[0]]}, ${cols[n[1]]})`).join(" y ") || "Ninguno"}`;
+  res += `<br><strong>Solución secuencial</strong> (Riovalle mueve primero): (${filas[seq[0]]}, ${cols[seq[1]]}) → Riovalle ${(A[seq[0]][seq[1]] / 1e6).toFixed(1)}M, Rival ${(B[seq[0]][seq[1]] / 1e6).toFixed(1)}M`;
+  document.getElementById("resultado-matriz").innerHTML = res;
+}
+
+document.getElementById("btn-calcular-matriz").addEventListener("click", calcularMatriz);
+
+// C.3 — AG Minimax
+function renderGeneracionMinimax(idx) {
+  const f = historialMinimax[idx];
+  const gens = historialMinimax.length - 1;
+  document.getElementById("etiqueta-gen-minimax").textContent = `Generación ${f.gen} de ${gens}`;
+  const cGrid = document.getElementById("cromosoma-grid-c");
+  const cChips = document.getElementById("chips-incluidos-c");
+  cGrid.innerHTML = ""; cChips.innerHTML = "";
+  const erosiones = getErosiones(), k = getKAtaques();
+  const ataques = perdidaPorAtaque(f.mejor, erosiones).sort((a, b) => b.perdida - a.perdida);
+  const atacados = new Set(ataques.slice(0, k).map(a => a.idx));
+  f.mejor.forEach((g, i) => {
+    if (i >= productos.length) return;
+    const c = document.createElement("div"); c.className = "gen-celda" + (g ? " activo" : ""); c.textContent = g; c.title = productos[i].nombre; cGrid.appendChild(c);
+    if (g) { const ch = document.createElement("span"); ch.className = "chip" + (atacados.has(i) ? " chip-rust" : ""); ch.textContent = productos[i].nombre + (atacados.has(i) ? " ⚔️" : ""); cChips.appendChild(ch); }
+  });
+  if (!cChips.innerHTML) cChips.innerHTML = '<span class="chip" style="background:var(--line);color:var(--ink-soft);">Ningún producto</span>';
+  const e = Number(inputEspacio.value);
+  document.getElementById("stat-c-costo").textContent = formatoCOP(costoTotal(f.mejor));
+  document.getElementById("stat-c-espacio").textContent = espacioTotal(f.mejor) + " / " + e;
+  document.getElementById("stat-c-esperada").textContent = formatoCOP(f.mejorEsperada);
+  document.getElementById("stat-c-peor").textContent = formatoCOP(f.mejorPeorCaso);
+  const g0 = historialMinimax[0];
+  document.getElementById("stat-c-esperada-delta").innerHTML = idx === 0 ? '<span class="delta flat">punto de partida</span>'
+    : deltaBadge(f.mejorEsperada, g0.mejorEsperada) + ' <span style="font-size:.7rem;color:var(--ink-soft);">vs gen. 0</span>';
+  document.getElementById("stat-c-peor-delta").innerHTML = idx === 0 ? '<span class="delta flat">punto de partida</span>'
+    : deltaBadge(f.mejorPeorCaso, g0.mejorPeorCaso) + ' <span style="font-size:.7rem;color:var(--ink-soft);">vs gen. 0</span>';
+  // Árbol minimax
+  const arbol = document.getElementById("arbol-minimax");
+  const pAtaque = perdidaPorAtaque(f.mejor, erosiones).sort((a, b) => a.perdida - b.perdida);
+  let html = `<div class="nivel-0">MAX (Riovalle) → utilidad esperada ${formatoCOP(utilidadTotal(f.mejor))}</div>`;
+  pAtaque.forEach(a => {
+    const queda = utilidadTotal(f.mejor) - a.perdida;
+    const esAtacado = atacados.has(a.idx);
+    html += `<div class="nivel-1${esAtacado ? ' atacado' : ''}">MIN ataca ${productos[a.idx].nombre} → quedan ${formatoCOP(queda)}${esAtacado ? " ← peor caso" : ""}</div>`;
+  });
+  arbol.innerHTML = html;
+  dibujarLineas(document.getElementById("grafico-minimax"),
+    [{ valores: historialMinimax.map(f => f.mejorPeorCaso), color: "var(--purple)" }, { valores: historialMinimax.map(f => f.peorCasoProm), color: "var(--ink-soft)" }],
+    { n: historialMinimax.length, marcador: idx, formatoEje: v => (v / 1e6).toFixed(0) + "M" });
+}
+
+function dibujarScatter(validas, sprint3, minimax, fbMejores) {
+  const svg = document.getElementById("scatter-portafolios");
+  const ancho = 640, alto = 380;
+  const margen = { top: 14, right: 14, bottom: 30, left: 58 };
+  const w = ancho - margen.left - margen.right, h = alto - margen.top - margen.bottom;
+  const erosiones = getErosiones(), k = getKAtaques();
+  const datos = validas.map(ind => ({ ind, x: utilidadTotal(ind), y: utilidadPeorCaso(ind, erosiones, k) }));
+  const maxX = Math.max(...datos.map(d => d.x)) * 1.05 || 1, maxY = Math.max(...datos.map(d => d.y)) * 1.05 || 1;
+  const minX = 0, minY = Math.min(0, ...datos.map(d => d.y)) * 1.1;
+  const sx = (v) => margen.left + ((v - minX) / (maxX - minX || 1)) * w;
+  const sy = (v) => margen.top + h - ((v - minY) / (maxY - minY || 1)) * h;
+  let s = "";
+  for (let p = 0; p <= 4; p++) {
+    const yy = margen.top + h - (p / 4) * h, vr = minY + (p / 4) * (maxY - minY);
+    s += `<line x1="${margen.left}" y1="${yy}" x2="${ancho - margen.right}" y2="${yy}" stroke="var(--line)" stroke-width="1"/>`;
+    s += `<text x="${margen.left - 8}" y="${yy + 3}" font-size="9" fill="var(--ink-soft)" text-anchor="end" font-family="IBM Plex Sans,sans-serif">${(vr / 1e6).toFixed(0)}M</text>`;
+  }
+  for (let p = 0; p <= 4; p++) {
+    const xx = margen.left + (p / 4) * w, vr = minX + (p / 4) * (maxX - minX);
+    s += `<text x="${xx}" y="${alto - 6}" font-size="9" fill="var(--ink-soft)" text-anchor="middle" font-family="IBM Plex Sans,sans-serif">${(vr / 1e6).toFixed(0)}M</text>`;
+  }
+  datos.forEach(d => { s += `<circle cx="${sx(d.x)}" cy="${sy(d.y)}" r="3.5" fill="var(--ink-soft)" opacity="0.35"/>`; });
+  if (sprint3) {
+    const x3 = utilidadTotal(sprint3), y3 = utilidadPeorCaso(sprint3, erosiones, k);
+    s += `<circle cx="${sx(x3)}" cy="${sy(y3)}" r="7" fill="var(--blue)" stroke="var(--paper)" stroke-width="2"/>`;
+  }
+  fbMejores.forEach(ind => {
+    const xf = utilidadTotal(ind), yf = utilidadPeorCaso(ind, erosiones, k);
+    s += `<circle cx="${sx(xf)}" cy="${sy(yf)}" r="7" fill="var(--amber)" stroke="var(--paper)" stroke-width="2"/>`;
+  });
+  if (minimax) {
+    const xm = utilidadTotal(minimax), ym = utilidadPeorCaso(minimax, erosiones, k);
+    s += `<circle cx="${sx(xm)}" cy="${sy(ym)}" r="7" fill="var(--purple)" stroke="var(--paper)" stroke-width="2"/>`;
+  }
+  svg.innerHTML = s;
+}
+
+function renderSensibilidad(pres, esp) {
+  const n = nGenes();
+  if (n > MAX_FUERZA_BRUTA) {
+    document.getElementById("tabla-sensibilidad-wrap").innerHTML = `<p class="aviso-fb">Con ${n} productos la sensibilidad por fuerza bruta no es viable (2^${n} combinaciones). Puede reducir los productos a ${MAX_FUERZA_BRUTA} o menos para habilitarla.</p>`;
+    return;
+  }
+  const erosionesBase = getErosiones();
+  const kMax = getKAtaques();
+  const sprint3 = estado.mejorPortafolio || Array.from({ length: n }, () => 0);
+  let html = "";
+  for (let k = 1; k <= Math.min(kMax + 1, 3); k++) {
+    html += `<h3 style="margin-top:16px;">Rival con ${k} ataque${k > 1 ? "s" : ""}</h3>`;
+    html += '<table class="sensibilidad-tabla"><tr><th>Factor erosión</th><th>Portafolio óptimo</th><th>Peor caso</th><th>Parte A peor caso</th><th>Mejora del óptimo vs Parte A</th></tr>';
+    for (const factor of [0.5, 0.75, 1.0, 1.25, 1.5]) {
+      const ero = erosionesBase.map(e => Math.min(0.95, e * factor));
+      const fb = fuerzaBrutaMinimax(pres, esp, ero, k);
+      if (!fb) continue;
+      const s3val = utilidadPeorCaso(sprint3, ero, k);
+      const diff = fb.mejorValor - s3val;
+      const nombres = fb.mejores.slice(0, 2).map(ind => nombresIncluidos(ind).join(", ")).join(" | ");
+      const esMejor = factor === 1.0;
+      html += `<tr${esMejor ? ' class="mejor-fila"' : ''}><td>×${factor.toFixed(2)}${esMejor ? " (base)" : ""}</td><td style="text-align:left;font-size:.78rem;">${nombres}${fb.mejores.length > 2 ? ` (+${fb.mejores.length - 2})` : ""}</td><td>${formatoCOP(fb.mejorValor)}</td><td>${formatoCOP(s3val)}</td><td>${deltaBadge(fb.mejorValor, s3val)}</td></tr>`;
+    }
+    html += "</table>";
+  }
+  document.getElementById("tabla-sensibilidad-wrap").innerHTML = html;
+}
+
+function ejecutarMinimax() {
+  const p = Number(inputPresupuesto.value), e = Number(inputEspacio.value);
+  if (!estado.mejorPortafolio) {
+    const hA = correrAG(p, e, 30, 40, 0.10, 1);
+    estado.mejorPortafolio = hA[hA.length - 1].mejor;
+    refAutomatica = true;
+    actualizarBannerC();
+  }
+  const erosiones = getErosiones(), k = getKAtaques();
+  const tamPob = Number(document.getElementById("param-c-pop").value);
+  const gens = Number(document.getElementById("param-c-gen").value);
+  const probMut = Number(document.getElementById("param-c-mut").value);
+  const elite = Number(document.getElementById("param-c-elite").value);
+  historialMinimax = correrAGMinimax(p, e, erosiones, k, tamPob, gens, probMut, elite);
+  const slider = document.getElementById("slider-gen-minimax");
+  slider.max = String(historialMinimax.length - 1); slider.value = "0";
+  document.getElementById("panel-resultado-minimax").hidden = false;
+  renderGeneracionMinimax(0);
+
+  // Comparación
+  const n = nGenes();
+  const mejorAGMM = historialMinimax[historialMinimax.length - 1];
+  const sprint3 = estado.mejorPortafolio || Array.from({ length: n }, () => 0);
+  const listaP = ind => { const ns = nombresIncluidos(ind); return ns.length ? "<ul>" + ns.map(x => `<li>${x}</li>`).join("") + "</ul>" : "<p>Ninguno</p>"; };
+  const grid = document.getElementById("comparacion-minimax-grid");
+  let fbM = null;
+  const sA = { u: utilidadTotal(sprint3), pw: utilidadPeorCaso(sprint3, erosiones, k) };
+
+  if (n <= MAX_FUERZA_BRUTA) {
+    const fb = fbM = fuerzaBrutaMinimax(p, e, erosiones, k);
+    grid.innerHTML = `<div class="comparacion-grid-3">
+      <div class="resultado-caja"><h3>Parte A (referencia)</h3>${listaP(sprint3)}<p>Esperada: <strong>${formatoCOP(sA.u)}</strong></p><p>Peor caso: <strong>${formatoCOP(sA.pw)}</strong></p></div>
+      <div class="resultado-caja minimax"><h3>AG Minimax</h3>${listaP(mejorAGMM.mejor)}<p>Esperada: <strong>${formatoCOP(mejorAGMM.mejorEsperada)}</strong><br>${deltaBadge(mejorAGMM.mejorEsperada, sA.u)}</p><p>Peor caso: <strong>${formatoCOP(mejorAGMM.mejorPeorCaso)}</strong><br>${deltaBadge(mejorAGMM.mejorPeorCaso, sA.pw)}</p></div>
+      <div class="resultado-caja fb"><h3>Fuerza bruta (óptimo)</h3>${fb ? listaP(fb.mejores[0]) + `<p>Esperada: <strong>${formatoCOP(utilidadTotal(fb.mejores[0]))}</strong><br>${deltaBadge(utilidadTotal(fb.mejores[0]), sA.u)}</p><p>Peor caso: <strong>${formatoCOP(fb.mejorValor)}</strong><br>${deltaBadge(fb.mejorValor, sA.pw)}</p>` : "<p>—</p>"}</div>
+    </div>`;
+    const nota = document.getElementById("nota-minimax");
+    nota.hidden = false;
+    if (fb && Math.abs(mejorAGMM.mejorPeorCaso - fb.mejorValor) < 1e-6) {
+      nota.textContent = `El AG Minimax llegó al óptimo global (${formatoCOP(fb.mejorValor)}). ${fb.mejores.length > 1 ? `Hay ${fb.mejores.length} portafolios empatados.` : ""}`;
+    } else if (fb) {
+      nota.textContent = `El AG no llegó al óptimo: ${formatoCOP(mejorAGMM.mejorPeorCaso)} vs ${formatoCOP(fb.mejorValor)} de fuerza bruta. Puede ejecutarlo otra vez o subir generaciones/población.`;
+    }
+    // Scatter
+    document.getElementById("scatter-section").hidden = false;
+    dibujarScatter(fb.validas, sprint3, mejorAGMM.mejor, fb.mejores);
+    // Sensibilidad
+    renderSensibilidad(p, e);
+    document.getElementById("sensibilidad-minimax").hidden = false;
+  } else {
+    grid.innerHTML = `<div class="comparacion-grid">
+      <div class="resultado-caja"><h3>Parte A (referencia)</h3>${listaP(sprint3)}<p>Esperada: <strong>${formatoCOP(sA.u)}</strong></p><p>Peor caso: <strong>${formatoCOP(sA.pw)}</strong></p></div>
+      <div class="resultado-caja minimax"><h3>AG Minimax</h3>${listaP(mejorAGMM.mejor)}<p>Esperada: <strong>${formatoCOP(mejorAGMM.mejorEsperada)}</strong><br>${deltaBadge(mejorAGMM.mejorEsperada, sA.u)}</p><p>Peor caso: <strong>${formatoCOP(mejorAGMM.mejorPeorCaso)}</strong><br>${deltaBadge(mejorAGMM.mejorPeorCaso, sA.pw)}</p></div>
+    </div>`;
+    const nota = document.getElementById("nota-minimax");
+    nota.hidden = false;
+    nota.textContent = `Con ${n} productos no se puede hacer fuerza bruta ni scatter (2^${n} combinaciones). El AG Minimax es la herramienta de búsqueda.`;
+    document.getElementById("scatter-section").hidden = true;
+    document.getElementById("tabla-sensibilidad-wrap").innerHTML = `<p class="aviso-fb">Con ${n} productos la sensibilidad por fuerza bruta no es viable.</p>`;
+    document.getElementById("sensibilidad-minimax").hidden = false;
+  }
+  renderMetricasMinimax(sprint3, mejorAGMM.mejor, fbM, erosiones, k);
+  document.getElementById("resultado-final-minimax").hidden = false;
+}
+
+document.getElementById("btn-correr-minimax").addEventListener("click", () => {
+  ejecutarMinimax();
+  document.getElementById("panel-resultado-minimax").scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+document.getElementById("slider-gen-minimax").addEventListener("input", () => {
+  if (historialMinimax) renderGeneracionMinimax(Number(document.getElementById("slider-gen-minimax").value));
+});
+
+// =============================================================================
+// INICIALIZACIÓN
+// =============================================================================
+renderTablaProductos();
+renderRestricciones();
+actualizarBannerC();
+initErosionGrid();
+initSelectMatriz();
+calcularMatriz();
+</script>
+</body>
+</html>

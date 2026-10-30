@@ -1,0 +1,1799 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_6e11947f631e7074396d71332fb0ea9b {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+<style>
+  .leaflet-control-layers {
+      border:1px solid #DCE5EC !important; border-radius:9px !important;
+      box-shadow:0 4px 16px rgba(15,48,87,.16) !important;
+      font-family:Helvetica,Arial,sans-serif !important; font-size:11.5px !important;
+      color:#1A2733 !important; padding:4px 2px !important; max-width:290px;
+  }
+  .leaflet-control-layers-list { padding:2px 6px 4px 6px !important; }
+  .leaflet-control-layers label { margin:2px 0 !important; line-height:1.45 !important; }
+  .leaflet-control-layers-separator { border-top:1px solid #E8EEF3 !important; }
+  .leaflet-control-layers::before {
+      content:"CAPAS  ·  enciende y apaga"; display:block;
+      font-size:9px; letter-spacing:.14em; color:#8697A6;
+      padding:5px 8px 4px 8px; border-bottom:1px solid #E8EEF3; margin-bottom:3px;
+  }
+</style>
+
+<div style="position:fixed;top:14px;right:14px;z-index:9999;width:300px;
+     background:rgba(255,255,255,.97);border:1px solid #DCE5EC;border-radius:10px;
+     box-shadow:0 6px 22px rgba(15,48,87,.18);font-family:Helvetica,Arial,sans-serif;
+     color:#1A2733;overflow:hidden">
+  <div style="background:#0F3057;color:#fff;padding:12px 14px">
+    <div style="font-size:10px;letter-spacing:.18em;opacity:.75">MEGAMARKET · LOGÍSTICA</div>
+    <div style="font-size:16px;font-weight:700;margin-top:2px">Uva Pasa Riovalle</div>
+    <div style="font-size:11px;opacity:.8">Recorrido completo calculado con A*</div>
+  </div>
+  <div style="padding:10px 14px;font-size:12px">
+    <table style="width:100%;border-collapse:collapse;font-size:12px">
+      <tr style="color:#A9B7C4;font-size:9.5px;letter-spacing:.08em">
+        <td>RUTA</td><td style="text-align:right">CLIENTES</td>
+        <td style="text-align:right">KM TOTAL</td></tr>
+      <tr><td style='padding:2px 8px 2px 0;color:#6B7C8C'>Poblado</td><td style='padding:2px 8px 2px 0;text-align:right;color:#6B7C8C'>8</td><td style='padding:2px 0;text-align:right;font-weight:600;color:#12659E;font-variant-numeric:tabular-nums'>16.77</td></tr><tr><td style='padding:2px 8px 2px 0;color:#6B7C8C'>Valle de Aburrá</td><td style='padding:2px 8px 2px 0;text-align:right;color:#6B7C8C'>4</td><td style='padding:2px 0;text-align:right;font-weight:600;color:#0F3057;font-variant-numeric:tabular-nums'>18.01</td></tr>
+    </table>
+    <div style="margin-top:10px;padding-top:8px;border-top:1px solid #E8EEF3;
+         font-size:11px;color:#6B7C8C;line-height:1.55">
+      Cada ruta es <b style="color:#1A2733">un solo viaje</b>: sale de la
+      Bodega Riovalle, visita a todos sus clientes (siempre yendo al más
+      cercano desde donde está parado) y <b style="color:#1A2733">termina
+      en la Plataforma Logística</b>, no en la bodega.
+    </div>
+    <div style="margin-top:9px;font-size:11px;color:#6B7C8C;line-height:1.6">
+      <span style="display:inline-block;width:10px;height:10px;border-radius:50%;
+      background:#B5761A;vertical-align:middle"></span> Bodega Riovalle (origen)<br>
+      <span style="display:inline-block;width:10px;height:10px;border-radius:50%;
+      background:#7A2E4D;vertical-align:middle"></span> Plataforma Logística (destino final)<br>
+      <span style="display:inline-block;width:22px;height:3px;background:#12659E;
+      vertical-align:middle"></span> Ruta óptima · Poblado<br>
+      <span style="display:inline-block;width:22px;height:3px;background:#0F3057;
+      vertical-align:middle"></span> Ruta óptima · Valle de Aburrá<br>
+      <span style="display:inline-block;width:22px;border-top:3px dashed #AEBECC;
+      vertical-align:middle"></span> Grafo completo (todas las conexiones)
+    </div>
+    <div style="margin-top:9px;font-size:10px;color:#A9B7C4;line-height:1.5">
+      La Plataforma Logística (Guayabal) tiene coordenadas estimadas por
+      nomenclatura vial, no geocodificadas con exactitud (±200-400 m).
+      Activa "Grafo · &lt;ruta&gt;" en el control de capas (arriba a la
+      izquierda) para ver todas las conexiones disponibles sin la ruta
+      resaltada.
+    </div>
+  </div>
+</div>
+    
+            <div class="folium-map" id="map_6e11947f631e7074396d71332fb0ea9b" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_6e11947f631e7074396d71332fb0ea9b = L.map(
+                "map_6e11947f631e7074396d71332fb0ea9b",
+                {
+                    center: [6.2, -75.593],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 12,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_248fbbd3559350d0b42a5c5e7b070ee4 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_248fbbd3559350d0b42a5c5e7b070ee4.addTo(map_6e11947f631e7074396d71332fb0ea9b);
+        
+    
+            var tile_layer_2bcd66f848a25703916e249604a9bf0a = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_2bcd66f848a25703916e249604a9bf0a.addTo(map_6e11947f631e7074396d71332fb0ea9b);
+        
+    
+            var feature_group_6cd89ceea241a4b876417400f874cfde = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_9b7acdf95137f0d668011b5822f2acb5 = L.circleMarker(
+                [6.2197, -75.5905],
+                {"bubblingMouseEvents": true, "color": "#FFFFFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#B5761A", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 15, "stroke": true, "weight": 3}
+            ).addTo(feature_group_6cd89ceea241a4b876417400f874cfde);
+        
+    
+        var popup_cf1f6e8cd1f920d5e89944b1a84720e9 = L.popup({
+  "maxWidth": 240,
+});
+
+        
+            
+                var html_4f49cc80cb75a40332480583c4107bf1 = $(`<div id="html_4f49cc80cb75a40332480583c4107bf1" style="width: 100.0%; height: 100.0%;"><b>Bodega Riovalle</b><br>Sector Olaya Herrera<br>Origen de las dos rutas de reparto</div>`)[0];
+                popup_cf1f6e8cd1f920d5e89944b1a84720e9.setContent(html_4f49cc80cb75a40332480583c4107bf1);
+            
+        
+
+        circle_marker_9b7acdf95137f0d668011b5822f2acb5.bindPopup(popup_cf1f6e8cd1f920d5e89944b1a84720e9)
+        ;
+
+        
+    
+    
+            circle_marker_9b7acdf95137f0d668011b5822f2acb5.bindTooltip(
+                `<div>
+                     Bodega Riovalle (origen)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_08b192455430f10734c63954abd9e2a3 = L.marker(
+                [6.2197, -75.5905],
+                {
+}
+            ).addTo(feature_group_6cd89ceea241a4b876417400f874cfde);
+        
+    
+            var div_icon_3987c11be992d6fa242d3a5312e64f3e = L.divIcon({
+  "html": "\u003cdiv style=\"font:700 14px/30px Helvetica,Arial;color:#fff;text-align:center\"\u003eB\u003c/div\u003e",
+  "iconSize": [30, 30],
+  "iconAnchor": [15, 15],
+  "className": "empty",
+});
+        
+    
+                marker_08b192455430f10734c63954abd9e2a3.setIcon(div_icon_3987c11be992d6fa242d3a5312e64f3e);
+            
+    
+            feature_group_6cd89ceea241a4b876417400f874cfde.addTo(map_6e11947f631e7074396d71332fb0ea9b);
+        
+    
+            var feature_group_54fa16b6e2b3297a8c8f5e571aee7acd = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_25a7256d6f84a39dbd81c1ff089e329f = L.circleMarker(
+                [6.1976, -75.5807],
+                {"bubblingMouseEvents": true, "color": "#FFFFFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#7A2E4D", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 15, "stroke": true, "weight": 3}
+            ).addTo(feature_group_54fa16b6e2b3297a8c8f5e571aee7acd);
+        
+    
+        var popup_866a7b7b50b38ac1a38942d17d4bbbb6 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_5e32b9a1f9ca67e9de3a36e8a4f4548b = $(`<div id="html_5e32b9a1f9ca67e9de3a36e8a4f4548b" style="width: 100.0%; height: 100.0%;"><b>Plataforma Logística</b><br>Cra. 51C #12B Sur-76, San Fernando, Guayabal<br>Punto final de las dos rutas de reparto<br><i>Coordenada estimada por nomenclatura vial, no geocodificada con exactitud (±200-400 m)</i></div>`)[0];
+                popup_866a7b7b50b38ac1a38942d17d4bbbb6.setContent(html_5e32b9a1f9ca67e9de3a36e8a4f4548b);
+            
+        
+
+        circle_marker_25a7256d6f84a39dbd81c1ff089e329f.bindPopup(popup_866a7b7b50b38ac1a38942d17d4bbbb6)
+        ;
+
+        
+    
+    
+            circle_marker_25a7256d6f84a39dbd81c1ff089e329f.bindTooltip(
+                `<div>
+                     Plataforma Logística (destino final)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_173d800b499abe81c15452e2ca5e1dc4 = L.marker(
+                [6.1976, -75.5807],
+                {
+}
+            ).addTo(feature_group_54fa16b6e2b3297a8c8f5e571aee7acd);
+        
+    
+            var div_icon_a84cbb3ab25ba9506e580dd0633693dd = L.divIcon({
+  "html": "\u003cdiv style=\"font:700 14px/30px Helvetica,Arial;color:#fff;text-align:center\"\u003eP\u003c/div\u003e",
+  "iconSize": [30, 30],
+  "iconAnchor": [15, 15],
+  "className": "empty",
+});
+        
+    
+                marker_173d800b499abe81c15452e2ca5e1dc4.setIcon(div_icon_a84cbb3ab25ba9506e580dd0633693dd);
+            
+    
+            feature_group_54fa16b6e2b3297a8c8f5e571aee7acd.addTo(map_6e11947f631e7074396d71332fb0ea9b);
+        
+    
+            var feature_group_b81b95cd81d31e05fd2514a3ebfc78fd = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var poly_line_8501e311f8b609c091035289a7f29d95 = L.polyline(
+                [[6.2197, -75.5905], [6.1935, -75.579]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_8501e311f8b609c091035289a7f29d95.bindTooltip(
+                `<div>
+                     Bodega Olaya Herrera — Acceso Poblado (Aguacatala) · 3.20 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_5e2f348aec3171651faecf742942f06a = L.polyline(
+                [[6.1935, -75.579], [6.2218, -75.5745]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_5e2f348aec3171651faecf742942f06a.bindTooltip(
+                `<div>
+                     Acceso Poblado (Aguacatala) — Fruver del Río · 3.20 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_d5827a6f3b70c3d888c44612c7117cb2 = L.polyline(
+                [[6.1935, -75.579], [6.2013, -75.5598]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_d5827a6f3b70c3d888c44612c7117cb2.bindTooltip(
+                `<div>
+                     Acceso Poblado (Aguacatala) — Fruver Visitación · 2.30 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_6ff5d0a1a9669e32df54584bc7ccce81 = L.polyline(
+                [[6.1935, -75.579], [6.2077, -75.5658]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_6ff5d0a1a9669e32df54584bc7ccce81.bindTooltip(
+                `<div>
+                     Acceso Poblado (Aguacatala) — Five Sisters · 2.20 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_80897db58f0db0062bdcf5e2f2e8d045 = L.polyline(
+                [[6.1935, -75.579], [6.2093, -75.5688]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_80897db58f0db0062bdcf5e2f2e8d045.bindTooltip(
+                `<div>
+                     Acceso Poblado (Aguacatala) — Supermercado Merka 10 · 2.10 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_c9f46481e5d28ece5f420f9f7c3528cc = L.polyline(
+                [[6.1935, -75.579], [6.2029, -75.5722]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_c9f46481e5d28ece5f420f9f7c3528cc.bindTooltip(
+                `<div>
+                     Acceso Poblado (Aguacatala) — Hotel Four Points · 1.30 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_c3684f256c97df9f5bcd773019f4be72 = L.polyline(
+                [[6.1935, -75.579], [6.2046, -75.5605]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_c3684f256c97df9f5bcd773019f4be72.bindTooltip(
+                `<div>
+                     Acceso Poblado (Aguacatala) — Mercados Verona · 2.40 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_b507ccfd006a0f0f3bf5f54afc03e2d8 = L.polyline(
+                [[6.1935, -75.579], [6.2006, -75.5783]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_b507ccfd006a0f0f3bf5f54afc03e2d8.bindTooltip(
+                `<div>
+                     Acceso Poblado (Aguacatala) — EAFIT La Bodeguita · 0.80 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_fb5d432a0e7e9e41be9f34e542eb0c13 = L.polyline(
+                [[6.1935, -75.579], [6.2112, -75.5628]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_fb5d432a0e7e9e41be9f34e542eb0c13.bindTooltip(
+                `<div>
+                     Acceso Poblado (Aguacatala) — Redetrans · 2.70 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_ce6fe294b23d8ad2be7c27cee4ad93bb = L.polyline(
+                [[6.1935, -75.579], [6.1976, -75.5807]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_ce6fe294b23d8ad2be7c27cee4ad93bb.bindTooltip(
+                `<div>
+                     Acceso Poblado (Aguacatala) — Plataforma Logística · 0.50 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_e57a28cdfc33241059573ca472b2ea4d = L.polyline(
+                [[6.2013, -75.5598], [6.2077, -75.5658]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_e57a28cdfc33241059573ca472b2ea4d.bindTooltip(
+                `<div>
+                     Fruver Visitación — Five Sisters · 0.97 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_ad0f9ab602aae8fe6f5e895adc0bef8b = L.polyline(
+                [[6.2013, -75.5598], [6.2093, -75.5688]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_ad0f9ab602aae8fe6f5e895adc0bef8b.bindTooltip(
+                `<div>
+                     Fruver Visitación — Supermercado Merka 10 · 1.33 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_917584b45e2ca27962dfd755ff8ff0c7 = L.polyline(
+                [[6.2013, -75.5598], [6.2029, -75.5722]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_917584b45e2ca27962dfd755ff8ff0c7.bindTooltip(
+                `<div>
+                     Fruver Visitación — Hotel Four Points · 1.38 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_308655bdf79272ddd7911ae98fbc54f7 = L.polyline(
+                [[6.2013, -75.5598], [6.2046, -75.5605]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_308655bdf79272ddd7911ae98fbc54f7.bindTooltip(
+                `<div>
+                     Fruver Visitación — Mercados Verona · 0.38 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_53c94f2cac432f1ba8b22ee313446055 = L.polyline(
+                [[6.2013, -75.5598], [6.2112, -75.5628]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_53c94f2cac432f1ba8b22ee313446055.bindTooltip(
+                `<div>
+                     Fruver Visitación — Redetrans · 1.15 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_a212e131ccb9e98c2004b7a02872f651 = L.polyline(
+                [[6.2077, -75.5658], [6.2093, -75.5688]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_a212e131ccb9e98c2004b7a02872f651.bindTooltip(
+                `<div>
+                     Five Sisters — Supermercado Merka 10 · 0.38 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_bdea7f3b879a4846761d87922468f427 = L.polyline(
+                [[6.2077, -75.5658], [6.2029, -75.5722]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_bdea7f3b879a4846761d87922468f427.bindTooltip(
+                `<div>
+                     Five Sisters — Hotel Four Points · 0.89 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_cba38d181137046968c57cd660b35e54 = L.polyline(
+                [[6.2077, -75.5658], [6.2046, -75.5605]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_cba38d181137046968c57cd660b35e54.bindTooltip(
+                `<div>
+                     Five Sisters — Mercados Verona · 0.68 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_340ea7297272394692d7a23d41ac16c3 = L.polyline(
+                [[6.2077, -75.5658], [6.2112, -75.5628]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_340ea7297272394692d7a23d41ac16c3.bindTooltip(
+                `<div>
+                     Five Sisters — Redetrans · 0.51 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_46b1d67eac85dae11b6cae7e59568d18 = L.polyline(
+                [[6.2093, -75.5688], [6.2029, -75.5722]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_46b1d67eac85dae11b6cae7e59568d18.bindTooltip(
+                `<div>
+                     Supermercado Merka 10 — Hotel Four Points · 0.80 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_51fa6c32bec78b5790fdda1ef7b07d70 = L.polyline(
+                [[6.2093, -75.5688], [6.2046, -75.5605]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_51fa6c32bec78b5790fdda1ef7b07d70.bindTooltip(
+                `<div>
+                     Supermercado Merka 10 — Mercados Verona · 1.06 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_e0ce979e01421277d9ccbf265fca34cc = L.polyline(
+                [[6.2093, -75.5688], [6.2006, -75.5783]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_e0ce979e01421277d9ccbf265fca34cc.bindTooltip(
+                `<div>
+                     Supermercado Merka 10 — EAFIT La Bodeguita · 1.43 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_3b2bd0d4c27621a927e43cdc16e16f8b = L.polyline(
+                [[6.2093, -75.5688], [6.2112, -75.5628]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_3b2bd0d4c27621a927e43cdc16e16f8b.bindTooltip(
+                `<div>
+                     Supermercado Merka 10 — Redetrans · 0.70 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_48f33ed8f1ef534668806ebd77c46c80 = L.polyline(
+                [[6.2029, -75.5722], [6.2046, -75.5605]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_48f33ed8f1ef534668806ebd77c46c80.bindTooltip(
+                `<div>
+                     Hotel Four Points — Mercados Verona · 1.31 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_3db613271932f2b2644b59e898fbba42 = L.polyline(
+                [[6.2029, -75.5722], [6.2006, -75.5783]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_3db613271932f2b2644b59e898fbba42.bindTooltip(
+                `<div>
+                     Hotel Four Points — EAFIT La Bodeguita · 0.72 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_74cdbc68e2582b45257434985587e333 = L.polyline(
+                [[6.2029, -75.5722], [6.2112, -75.5628]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_74cdbc68e2582b45257434985587e333.bindTooltip(
+                `<div>
+                     Hotel Four Points — Redetrans · 1.39 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_859ae88758070f996d6c17163de2d25d = L.polyline(
+                [[6.2046, -75.5605], [6.2112, -75.5628]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            poly_line_859ae88758070f996d6c17163de2d25d.bindTooltip(
+                `<div>
+                     Mercados Verona — Redetrans · 0.78 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0e3ca2cc774f927470c8eb9151e307c2 = L.circleMarker(
+                [6.1935, -75.579],
+                {"bubblingMouseEvents": true, "color": "#6B7C8C", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6B7C8C", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            circle_marker_0e3ca2cc774f927470c8eb9151e307c2.bindTooltip(
+                `<div>
+                     Acceso vial: Acceso Poblado (Aguacatala)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_6efe0fb0893b64841eed7a946c96adb6 = L.circleMarker(
+                [6.2218, -75.5745],
+                {"bubblingMouseEvents": true, "color": "#6B7C8C", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6B7C8C", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            circle_marker_6efe0fb0893b64841eed7a946c96adb6.bindTooltip(
+                `<div>
+                     Cliente: Fruver del Río
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b6f450f092c223cc21b8769293f732d1 = L.circleMarker(
+                [6.2013, -75.5598],
+                {"bubblingMouseEvents": true, "color": "#6B7C8C", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6B7C8C", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            circle_marker_b6f450f092c223cc21b8769293f732d1.bindTooltip(
+                `<div>
+                     Cliente: Fruver Visitación
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cff143caf9b3c1fa0108f28adf04635a = L.circleMarker(
+                [6.2077, -75.5658],
+                {"bubblingMouseEvents": true, "color": "#6B7C8C", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6B7C8C", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            circle_marker_cff143caf9b3c1fa0108f28adf04635a.bindTooltip(
+                `<div>
+                     Cliente: Five Sisters
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1d9485f9af52efcb4c528e87eb0881e7 = L.circleMarker(
+                [6.2093, -75.5688],
+                {"bubblingMouseEvents": true, "color": "#6B7C8C", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6B7C8C", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            circle_marker_1d9485f9af52efcb4c528e87eb0881e7.bindTooltip(
+                `<div>
+                     Cliente: Supermercado Merka 10
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5555a49159327db05d4ba20ebb61b6e9 = L.circleMarker(
+                [6.2029, -75.5722],
+                {"bubblingMouseEvents": true, "color": "#6B7C8C", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6B7C8C", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            circle_marker_5555a49159327db05d4ba20ebb61b6e9.bindTooltip(
+                `<div>
+                     Cliente: Hotel Four Points
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_02ace5e8c7c172268fa4213dc2c3b65c = L.circleMarker(
+                [6.2046, -75.5605],
+                {"bubblingMouseEvents": true, "color": "#6B7C8C", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6B7C8C", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            circle_marker_02ace5e8c7c172268fa4213dc2c3b65c.bindTooltip(
+                `<div>
+                     Cliente: Mercados Verona
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_6db42de2c3ec5141ef89d00a04d4b45e = L.circleMarker(
+                [6.2006, -75.5783],
+                {"bubblingMouseEvents": true, "color": "#6B7C8C", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6B7C8C", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            circle_marker_6db42de2c3ec5141ef89d00a04d4b45e.bindTooltip(
+                `<div>
+                     Cliente: EAFIT La Bodeguita
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4e51038589d58035c75cc7d732c4a6cf = L.circleMarker(
+                [6.2112, -75.5628],
+                {"bubblingMouseEvents": true, "color": "#6B7C8C", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6B7C8C", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b81b95cd81d31e05fd2514a3ebfc78fd);
+        
+    
+            circle_marker_4e51038589d58035c75cc7d732c4a6cf.bindTooltip(
+                `<div>
+                     Cliente: Redetrans
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var feature_group_1ba55e580a173a5b85a33f7cb27764ca = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var poly_line_1735627213992e5a43b40e75c4c55ee7 = L.polyline(
+                [[6.2197, -75.5905], [6.1935, -75.579], [6.2006, -75.5783], [6.2029, -75.5722], [6.2093, -75.5688], [6.2077, -75.5658], [6.2112, -75.5628], [6.2046, -75.5605], [6.2013, -75.5598], [6.1935, -75.579], [6.2218, -75.5745], [6.1935, -75.579], [6.1976, -75.5807]],
+                {"bubblingMouseEvents": true, "color": "#FFFFFF", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#FFFFFF", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 8}
+            ).addTo(feature_group_1ba55e580a173a5b85a33f7cb27764ca);
+        
+    
+            var poly_line_6c93eaa200451b2257afe8619b703040 = L.polyline(
+                [[6.2197, -75.5905], [6.1935, -75.579], [6.2006, -75.5783], [6.2029, -75.5722], [6.2093, -75.5688], [6.2077, -75.5658], [6.2112, -75.5628], [6.2046, -75.5605], [6.2013, -75.5598], [6.1935, -75.579], [6.2218, -75.5745], [6.1935, -75.579], [6.1976, -75.5807]],
+                {"bubblingMouseEvents": true, "color": "#12659E", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#12659E", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.95, "smoothFactor": 1.0, "stroke": true, "weight": 5}
+            ).addTo(feature_group_1ba55e580a173a5b85a33f7cb27764ca);
+        
+    
+            poly_line_6c93eaa200451b2257afe8619b703040.bindTooltip(
+                `<div>
+                     Recorrido completo · Poblado · 16.77 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_addf0c8ea49a16fbb32b3afe5a02e074 = L.circleMarker(
+                [6.2006, -75.5783],
+                {"bubblingMouseEvents": true, "color": "#FFFFFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#12659E", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13, "stroke": true, "weight": 3}
+            ).addTo(feature_group_1ba55e580a173a5b85a33f7cb27764ca);
+        
+    
+        var popup_03a214c924243b9931116057cc652004 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_047e09b7ea0629b80b56521843b11f8f = $(`<div id="html_047e09b7ea0629b80b56521843b11f8f" style="width: 100.0%; height: 100.0%;"><b>Parada 1: EAFIT La Bodeguita</b><br>Tramo desde Bodega Olaya Herrera: 4.00 km<br>Acumulado: 4.00 km<br>h(n) línea recta a Plataforma Logística: 0.43 km</div>`)[0];
+                popup_03a214c924243b9931116057cc652004.setContent(html_047e09b7ea0629b80b56521843b11f8f);
+            
+        
+
+        circle_marker_addf0c8ea49a16fbb32b3afe5a02e074.bindPopup(popup_03a214c924243b9931116057cc652004)
+        ;
+
+        
+    
+    
+            circle_marker_addf0c8ea49a16fbb32b3afe5a02e074.bindTooltip(
+                `<div>
+                     1. EAFIT La Bodeguita
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_a607576950bf95efff86e4ebc4753b7e = L.marker(
+                [6.2006, -75.5783],
+                {
+}
+            ).addTo(feature_group_1ba55e580a173a5b85a33f7cb27764ca);
+        
+    
+            var div_icon_4a4a182688c01f84c5ccce77b244397d = L.divIcon({
+  "html": "\u003cdiv style=\"font:700 13px/26px Helvetica,Arial;color:#fff;text-align:center\"\u003e1\u003c/div\u003e",
+  "iconSize": [26, 26],
+  "iconAnchor": [13, 13],
+  "className": "empty",
+});
+        
+    
+                marker_a607576950bf95efff86e4ebc4753b7e.setIcon(div_icon_4a4a182688c01f84c5ccce77b244397d);
+            
+    
+            var circle_marker_8c87b55414bdb356bc190e7ac13b3741 = L.circleMarker(
+                [6.2029, -75.5722],
+                {"bubblingMouseEvents": true, "color": "#FFFFFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#12659E", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13, "stroke": true, "weight": 3}
+            ).addTo(feature_group_1ba55e580a173a5b85a33f7cb27764ca);
+        
+    
+        var popup_2482a6cbbe716588f796f0be377b5d40 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_e4bc41ae1cfc323b40c85a0aa3b49526 = $(`<div id="html_e4bc41ae1cfc323b40c85a0aa3b49526" style="width: 100.0%; height: 100.0%;"><b>Parada 2: Hotel Four Points</b><br>Tramo desde EAFIT La Bodeguita: 0.72 km<br>Acumulado: 4.72 km<br>h(n) línea recta a Plataforma Logística: 1.11 km</div>`)[0];
+                popup_2482a6cbbe716588f796f0be377b5d40.setContent(html_e4bc41ae1cfc323b40c85a0aa3b49526);
+            
+        
+
+        circle_marker_8c87b55414bdb356bc190e7ac13b3741.bindPopup(popup_2482a6cbbe716588f796f0be377b5d40)
+        ;
+
+        
+    
+    
+            circle_marker_8c87b55414bdb356bc190e7ac13b3741.bindTooltip(
+                `<div>
+                     2. Hotel Four Points
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_071cfe853f3b8e309559d4119f2acabe = L.marker(
+                [6.2029, -75.5722],
+                {
+}
+            ).addTo(feature_group_1ba55e580a173a5b85a33f7cb27764ca);
+        
+    
+            var div_icon_7851ea2757d29cc4c453d5ed1138564c = L.divIcon({
+  "html": "\u003cdiv style=\"font:700 13px/26px Helvetica,Arial;color:#fff;text-align:center\"\u003e2\u003c/div\u003e",
+  "iconSize": [26, 26],
+  "iconAnchor": [13, 13],
+  "className": "empty",
+});
+        
+    
+                marker_071cfe853f3b8e309559d4119f2acabe.setIcon(div_icon_7851ea2757d29cc4c453d5ed1138564c);
+            
+    
+            var circle_marker_2ebc0d6cd926d6e046e075904278fef5 = L.circleMarker(
+                [6.2093, -75.5688],
+                {"bubblingMouseEvents": true, "color": "#FFFFFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#12659E", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13, "stroke": true, "weight": 3}
+            ).addTo(feature_group_1ba55e580a173a5b85a33f7cb27764ca);
+        
+    
+        var popup_2745dc841204f1f9ec361e151bb6ea3d = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_07d0601408d1db0b9853ba95c697073a = $(`<div id="html_07d0601408d1db0b9853ba95c697073a" style="width: 100.0%; height: 100.0%;"><b>Parada 3: Supermercado Merka 10</b><br>Tramo desde Hotel Four Points: 0.80 km<br>Acumulado: 5.52 km<br>h(n) línea recta a Plataforma Logística: 1.85 km</div>`)[0];
+                popup_2745dc841204f1f9ec361e151bb6ea3d.setContent(html_07d0601408d1db0b9853ba95c697073a);
+            
+        
+
+        circle_marker_2ebc0d6cd926d6e046e075904278fef5.bindPopup(popup_2745dc841204f1f9ec361e151bb6ea3d)
+        ;
+
+        
+    
+    
+            circle_marker_2ebc0d6cd926d6e046e075904278fef5.bindTooltip(
+                `<div>
+                     3. Supermercado Merka 10
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_9fc36094145ac38ebda4e5ea6a512b35 = L.marker(
+                [6.2093, -75.5688],
+                {
+}
+            ).addTo(feature_group_1ba55e580a173a5b85a33f7cb27764ca);
+        
+    
+            var div_icon_c42d281909daedce68b23992e40cac45 = L.divIcon({
+  "html": "\u003cdiv style=\"font:700 13px/26px Helvetica,Arial;color:#fff;text-align:center\"\u003e3\u003c/div\u003e",
+  "iconSize": [26, 26],
+  "iconAnchor": [13, 13],
+  "className": "empty",
+});
+        
+    
+                marker_9fc36094145ac38ebda4e5ea6a512b35.setIcon(div_icon_c42d281909daedce68b23992e40cac45);
+            
+    
+            var circle_marker_c8eb80ba192085edb47f89235a71a9f4 = L.circleMarker(
+                [6.2077, -75.5658],
+                {"bubblingMouseEvents": true, "color": "#FFFFFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#12659E", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13, "stroke": true, "weight": 3}
+            ).addTo(feature_group_1ba55e580a173a5b85a33f7cb27764ca);
+        
+    
+        var popup_c5b1ac2094eb9f3fe46a91ed8db23f9d = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_5dba2ac37534bea7585c45bf9ad29743 = $(`<div id="html_5dba2ac37534bea7585c45bf9ad29743" style="width: 100.0%; height: 100.0%;"><b>Parada 4: Five Sisters</b><br>Tramo desde Supermercado Merka 10: 0.38 km<br>Acumulado: 5.90 km<br>h(n) línea recta a Plataforma Logística: 1.99 km</div>`)[0];
+                popup_c5b1ac2094eb9f3fe46a91ed8db23f9d.setContent(html_5dba2ac37534bea7585c45bf9ad29743);
+            
+        
+
+        circle_marker_c8eb80ba192085edb47f89235a71a9f4.bindPopup(popup_c5b1ac2094eb9f3fe46a91ed8db23f9d)
+        ;
+
+        
+    
+    
+            circle_marker_c8eb80ba192085edb47f89235a71a9f4.bindTooltip(
+                `<div>
+                     4. Five Sisters
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_cc3d0c9bea3937c3f05f8ef5c9b3cba7 = L.marker(
+                [6.2077, -75.5658],
+                {
+}
+            ).addTo(feature_group_1ba55e580a173a5b85a33f7cb27764ca);
+        
+    
+            var div_icon_80b300c60f0634ee59b4e106af0b77c1 = L.divIcon({
+  "html": "\u003cdiv style=\"font:700 13px/26px Helvetica,Arial;color:#fff;text-align:center\"\u003e4\u003c/div\u003e",
+  "iconSize": [26, 26],
+  "iconAnchor": [13, 13],
+  "className": "empty",
+});
+        
+    
+                marker_cc3d0c9bea3937c3f05f8ef5c9b3cba7.setIcon(div_icon_80b300c60f0634ee59b4e106af0b77c1);
+            
+    
+            var circle_marker_bdd375f8b0d748d4ff2a5cd1f9dc702f = L.circleMarker(
+                [6.2112, -75.5628],
+                {"bubblingMouseEvents": true, "color": "#FFFFFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#12659E", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13, "stroke": true, "weight": 3}
+            ).addTo(feature_group_1ba55e580a173a5b85a33f7cb27764ca);
+        
+    
+        var popup_aacbc4dd26f03c44ff781bfa6e1fd497 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_47d58bbdba0e746951a05fca4956efff = $(`<div id="html_47d58bbdba0e746951a05fca4956efff" style="width: 100.0%; height: 100.0%;"><b>Parada 5: Redetrans</b><br>Tramo desde Five Sisters: 0.51 km<br>Acumulado: 6.41 km<br>h(n) línea recta a Plataforma Logística: 2.49 km</div>`)[0];
+                popup_aacbc4dd26f03c44ff781bfa6e1fd497.setContent(html_47d58bbdba0e746951a05fca4956efff);
+            
+        
+
+        circle_marker_bdd375f8b0d748d4ff2a5cd1f9dc702f.bindPopup(popup_aacbc4dd26f03c44ff781bfa6e1fd497)
+        ;
+
+        
+    
+    
+            circle_marker_bdd375f8b0d748d4ff2a5cd1f9dc702f.bindTooltip(
+                `<div>
+                     5. Redetrans
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_d8dd5b513b4979ef8855a788083e2a47 = L.marker(
+                [6.2112, -75.5628],
+                {
+}
+            ).addTo(feature_group_1ba55e580a173a5b85a33f7cb27764ca);
+        
+    
+            var div_icon_dbb9917a81be6343aeb4e78757970a6a = L.divIcon({
+  "html": "\u003cdiv style=\"font:700 13px/26px Helvetica,Arial;color:#fff;text-align:center\"\u003e5\u003c/div\u003e",
+  "iconSize": [26, 26],
+  "iconAnchor": [13, 13],
+  "className": "empty",
+});
+        
+    
+                marker_d8dd5b513b4979ef8855a788083e2a47.setIcon(div_icon_dbb9917a81be6343aeb4e78757970a6a);
+            
+    
+            var circle_marker_1f2cb42d50b110022ab45b4a16f25c62 = L.circleMarker(
+                [6.2046, -75.5605],
+                {"bubblingMouseEvents": true, "color": "#FFFFFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#12659E", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13, "stroke": true, "weight": 3}
+            ).addTo(feature_group_1ba55e580a173a5b85a33f7cb27764ca);
+        
+    
+        var popup_49ee741968898e521d5839a77ce8ccd0 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_47e84016f1ffe2ba5d649303bdfcc1bb = $(`<div id="html_47e84016f1ffe2ba5d649303bdfcc1bb" style="width: 100.0%; height: 100.0%;"><b>Parada 6: Mercados Verona</b><br>Tramo desde Redetrans: 0.78 km<br>Acumulado: 7.19 km<br>h(n) línea recta a Plataforma Logística: 2.36 km</div>`)[0];
+                popup_49ee741968898e521d5839a77ce8ccd0.setContent(html_47e84016f1ffe2ba5d649303bdfcc1bb);
+            
+        
+
+        circle_marker_1f2cb42d50b110022ab45b4a16f25c62.bindPopup(popup_49ee741968898e521d5839a77ce8ccd0)
+        ;
+
+        
+    
+    
+            circle_marker_1f2cb42d50b110022ab45b4a16f25c62.bindTooltip(
+                `<div>
+                     6. Mercados Verona
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_de141df8ae262bde9a1b5253cf7c623d = L.marker(
+                [6.2046, -75.5605],
+                {
+}
+            ).addTo(feature_group_1ba55e580a173a5b85a33f7cb27764ca);
+        
+    
+            var div_icon_94b89045f8623f7dcfbc1a700c2113a1 = L.divIcon({
+  "html": "\u003cdiv style=\"font:700 13px/26px Helvetica,Arial;color:#fff;text-align:center\"\u003e6\u003c/div\u003e",
+  "iconSize": [26, 26],
+  "iconAnchor": [13, 13],
+  "className": "empty",
+});
+        
+    
+                marker_de141df8ae262bde9a1b5253cf7c623d.setIcon(div_icon_94b89045f8623f7dcfbc1a700c2113a1);
+            
+    
+            var circle_marker_979ee801091069b3460e83f6428e0941 = L.circleMarker(
+                [6.2013, -75.5598],
+                {"bubblingMouseEvents": true, "color": "#FFFFFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#12659E", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13, "stroke": true, "weight": 3}
+            ).addTo(feature_group_1ba55e580a173a5b85a33f7cb27764ca);
+        
+    
+        var popup_e09df29505326768854228dc72fe1457 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_ee50468c4ba257bf11053af1e7f3bc41 = $(`<div id="html_ee50468c4ba257bf11053af1e7f3bc41" style="width: 100.0%; height: 100.0%;"><b>Parada 7: Fruver Visitación</b><br>Tramo desde Mercados Verona: 0.38 km<br>Acumulado: 7.57 km<br>h(n) línea recta a Plataforma Logística: 2.35 km</div>`)[0];
+                popup_e09df29505326768854228dc72fe1457.setContent(html_ee50468c4ba257bf11053af1e7f3bc41);
+            
+        
+
+        circle_marker_979ee801091069b3460e83f6428e0941.bindPopup(popup_e09df29505326768854228dc72fe1457)
+        ;
+
+        
+    
+    
+            circle_marker_979ee801091069b3460e83f6428e0941.bindTooltip(
+                `<div>
+                     7. Fruver Visitación
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_348c0d8b6dc8ba54e6f837a9fb9ea81e = L.marker(
+                [6.2013, -75.5598],
+                {
+}
+            ).addTo(feature_group_1ba55e580a173a5b85a33f7cb27764ca);
+        
+    
+            var div_icon_7a01b25ed3423b6c54b05fd4582956c7 = L.divIcon({
+  "html": "\u003cdiv style=\"font:700 13px/26px Helvetica,Arial;color:#fff;text-align:center\"\u003e7\u003c/div\u003e",
+  "iconSize": [26, 26],
+  "iconAnchor": [13, 13],
+  "className": "empty",
+});
+        
+    
+                marker_348c0d8b6dc8ba54e6f837a9fb9ea81e.setIcon(div_icon_7a01b25ed3423b6c54b05fd4582956c7);
+            
+    
+            var circle_marker_39ee345a09b56440c9b40508d9235be6 = L.circleMarker(
+                [6.2218, -75.5745],
+                {"bubblingMouseEvents": true, "color": "#FFFFFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#12659E", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13, "stroke": true, "weight": 3}
+            ).addTo(feature_group_1ba55e580a173a5b85a33f7cb27764ca);
+        
+    
+        var popup_cd1c2847d76ef47fdd00819e063c79e2 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_909a8d3de208b1825afd5b1487ccba94 = $(`<div id="html_909a8d3de208b1825afd5b1487ccba94" style="width: 100.0%; height: 100.0%;"><b>Parada 8: Fruver del Río</b><br>Tramo desde Fruver Visitación: 5.50 km<br>Acumulado: 13.07 km<br>h(n) línea recta a Plataforma Logística: 2.78 km</div>`)[0];
+                popup_cd1c2847d76ef47fdd00819e063c79e2.setContent(html_909a8d3de208b1825afd5b1487ccba94);
+            
+        
+
+        circle_marker_39ee345a09b56440c9b40508d9235be6.bindPopup(popup_cd1c2847d76ef47fdd00819e063c79e2)
+        ;
+
+        
+    
+    
+            circle_marker_39ee345a09b56440c9b40508d9235be6.bindTooltip(
+                `<div>
+                     8. Fruver del Río
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_6ed05909d2e97cfcca64a64ea5e90272 = L.marker(
+                [6.2218, -75.5745],
+                {
+}
+            ).addTo(feature_group_1ba55e580a173a5b85a33f7cb27764ca);
+        
+    
+            var div_icon_fc25fac5cca0259f5386c3b533cac327 = L.divIcon({
+  "html": "\u003cdiv style=\"font:700 13px/26px Helvetica,Arial;color:#fff;text-align:center\"\u003e8\u003c/div\u003e",
+  "iconSize": [26, 26],
+  "iconAnchor": [13, 13],
+  "className": "empty",
+});
+        
+    
+                marker_6ed05909d2e97cfcca64a64ea5e90272.setIcon(div_icon_fc25fac5cca0259f5386c3b533cac327);
+            
+    
+            feature_group_1ba55e580a173a5b85a33f7cb27764ca.addTo(map_6e11947f631e7074396d71332fb0ea9b);
+        
+    
+            var feature_group_f0ad5c581dd72aa4fa1265ea6f2f5555 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var poly_line_dbfdbebd74370b909688b2b09357ddac = L.polyline(
+                [[6.2197, -75.5905], [6.172, -75.612]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_f0ad5c581dd72aa4fa1265ea6f2f5555);
+        
+    
+            poly_line_dbfdbebd74370b909688b2b09357ddac.bindTooltip(
+                `<div>
+                     Bodega Olaya Herrera — Acceso Sur (Itagüí Centro) · 5.80 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_59367d9ec494d21e0633647898b2ad60 = L.polyline(
+                [[6.172, -75.612], [6.1735, -75.6152]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_f0ad5c581dd72aa4fa1265ea6f2f5555);
+        
+    
+            poly_line_59367d9ec494d21e0633647898b2ad60.bindTooltip(
+                `<div>
+                     Acceso Sur (Itagüí Centro) — CEDI Vaquita Itagüí · 0.40 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_5d908dcedeb5093e1ce824b4ad1d0eea = L.polyline(
+                [[6.172, -75.612], [6.1448, -75.6198]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_f0ad5c581dd72aa4fa1265ea6f2f5555);
+        
+    
+            poly_line_5d908dcedeb5093e1ce824b4ad1d0eea.bindTooltip(
+                `<div>
+                     Acceso Sur (Itagüí Centro) — CEDI Euro La Estrella · 3.20 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_781805624fb22aa16a0cc0b646c89cb3 = L.polyline(
+                [[6.172, -75.612], [6.1618, -75.6062]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_f0ad5c581dd72aa4fa1265ea6f2f5555);
+        
+    
+            poly_line_781805624fb22aa16a0cc0b646c89cb3.bindTooltip(
+                `<div>
+                     Acceso Sur (Itagüí Centro) — CEDI Merkepaisa · 1.30 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_81c871f08455065f2aeac85ed0158e96 = L.polyline(
+                [[6.172, -75.612], [6.1548, -75.6122]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_f0ad5c581dd72aa4fa1265ea6f2f5555);
+        
+    
+            poly_line_81c871f08455065f2aeac85ed0158e96.bindTooltip(
+                `<div>
+                     Acceso Sur (Itagüí Centro) — CEDI Supermú · 1.90 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_cfb1551e6e359361249873c8f377a638 = L.polyline(
+                [[6.172, -75.612], [6.1976, -75.5807]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_f0ad5c581dd72aa4fa1265ea6f2f5555);
+        
+    
+            poly_line_cfb1551e6e359361249873c8f377a638.bindTooltip(
+                `<div>
+                     Acceso Sur (Itagüí Centro) — Plataforma Logística · 4.50 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_bb03aa9d849a1d9a70b119634bbfcd56 = L.polyline(
+                [[6.1448, -75.6198], [6.1548, -75.6122]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_f0ad5c581dd72aa4fa1265ea6f2f5555);
+        
+    
+            poly_line_bb03aa9d849a1d9a70b119634bbfcd56.bindTooltip(
+                `<div>
+                     CEDI Euro La Estrella — CEDI Supermú · 1.39 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_0c5456e9920abafd3ea51281cf2bf6d3 = L.polyline(
+                [[6.1618, -75.6062], [6.1548, -75.6122]],
+                {"bubblingMouseEvents": true, "color": "#AEBECC", "dashArray": "5,6", "dashOffset": null, "fill": false, "fillColor": "#AEBECC", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_f0ad5c581dd72aa4fa1265ea6f2f5555);
+        
+    
+            poly_line_0c5456e9920abafd3ea51281cf2bf6d3.bindTooltip(
+                `<div>
+                     CEDI Merkepaisa — CEDI Supermú · 1.02 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_75e0c405cfe4fcc3d09f532d7573276c = L.circleMarker(
+                [6.172, -75.612],
+                {"bubblingMouseEvents": true, "color": "#6B7C8C", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6B7C8C", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_f0ad5c581dd72aa4fa1265ea6f2f5555);
+        
+    
+            circle_marker_75e0c405cfe4fcc3d09f532d7573276c.bindTooltip(
+                `<div>
+                     Acceso vial: Acceso Sur (Itagüí Centro)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9acefc9cc6f8bb719adbdf7862b680c7 = L.circleMarker(
+                [6.1735, -75.6152],
+                {"bubblingMouseEvents": true, "color": "#6B7C8C", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6B7C8C", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_f0ad5c581dd72aa4fa1265ea6f2f5555);
+        
+    
+            circle_marker_9acefc9cc6f8bb719adbdf7862b680c7.bindTooltip(
+                `<div>
+                     Cliente: CEDI Vaquita Itagüí
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_61f2bd10e97e71ea913742a5b4f0c0b8 = L.circleMarker(
+                [6.1448, -75.6198],
+                {"bubblingMouseEvents": true, "color": "#6B7C8C", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6B7C8C", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_f0ad5c581dd72aa4fa1265ea6f2f5555);
+        
+    
+            circle_marker_61f2bd10e97e71ea913742a5b4f0c0b8.bindTooltip(
+                `<div>
+                     Cliente: CEDI Euro La Estrella
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_6b0e1b74227cc3839cda38a613516546 = L.circleMarker(
+                [6.1618, -75.6062],
+                {"bubblingMouseEvents": true, "color": "#6B7C8C", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6B7C8C", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_f0ad5c581dd72aa4fa1265ea6f2f5555);
+        
+    
+            circle_marker_6b0e1b74227cc3839cda38a613516546.bindTooltip(
+                `<div>
+                     Cliente: CEDI Merkepaisa
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_3cf1489ed3e42b3144d6f969d6be88c0 = L.circleMarker(
+                [6.1548, -75.6122],
+                {"bubblingMouseEvents": true, "color": "#6B7C8C", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6B7C8C", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 1}
+            ).addTo(feature_group_f0ad5c581dd72aa4fa1265ea6f2f5555);
+        
+    
+            circle_marker_3cf1489ed3e42b3144d6f969d6be88c0.bindTooltip(
+                `<div>
+                     Cliente: CEDI Supermú
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var feature_group_00f06e6e249c1c2397c3acb4af04b802 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var poly_line_162da831d01749ab3972254af4146046 = L.polyline(
+                [[6.2197, -75.5905], [6.172, -75.612], [6.1735, -75.6152], [6.172, -75.612], [6.1618, -75.6062], [6.1548, -75.6122], [6.1448, -75.6198], [6.172, -75.612], [6.1976, -75.5807]],
+                {"bubblingMouseEvents": true, "color": "#FFFFFF", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#FFFFFF", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.85, "smoothFactor": 1.0, "stroke": true, "weight": 8}
+            ).addTo(feature_group_00f06e6e249c1c2397c3acb4af04b802);
+        
+    
+            var poly_line_803b06567218df2fd20a5aeebcedff96 = L.polyline(
+                [[6.2197, -75.5905], [6.172, -75.612], [6.1735, -75.6152], [6.172, -75.612], [6.1618, -75.6062], [6.1548, -75.6122], [6.1448, -75.6198], [6.172, -75.612], [6.1976, -75.5807]],
+                {"bubblingMouseEvents": true, "color": "#0F3057", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#0F3057", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.95, "smoothFactor": 1.0, "stroke": true, "weight": 5}
+            ).addTo(feature_group_00f06e6e249c1c2397c3acb4af04b802);
+        
+    
+            poly_line_803b06567218df2fd20a5aeebcedff96.bindTooltip(
+                `<div>
+                     Recorrido completo · Valle de Aburrá · 18.01 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_26879593eb15f77fad60563ab84e1cf3 = L.circleMarker(
+                [6.1735, -75.6152],
+                {"bubblingMouseEvents": true, "color": "#FFFFFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#0F3057", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13, "stroke": true, "weight": 3}
+            ).addTo(feature_group_00f06e6e249c1c2397c3acb4af04b802);
+        
+    
+        var popup_095486068ae18011889f4cacebc8d757 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_98d976edff63195e6eb00a6081bc6984 = $(`<div id="html_98d976edff63195e6eb00a6081bc6984" style="width: 100.0%; height: 100.0%;"><b>Parada 1: CEDI Vaquita Itagüí</b><br>Tramo desde Bodega Olaya Herrera: 6.20 km<br>Acumulado: 6.20 km<br>h(n) línea recta a Plataforma Logística: 4.66 km</div>`)[0];
+                popup_095486068ae18011889f4cacebc8d757.setContent(html_98d976edff63195e6eb00a6081bc6984);
+            
+        
+
+        circle_marker_26879593eb15f77fad60563ab84e1cf3.bindPopup(popup_095486068ae18011889f4cacebc8d757)
+        ;
+
+        
+    
+    
+            circle_marker_26879593eb15f77fad60563ab84e1cf3.bindTooltip(
+                `<div>
+                     1. CEDI Vaquita Itagüí
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_5fb3992b093d0dd283a50d37ac3ab0d8 = L.marker(
+                [6.1735, -75.6152],
+                {
+}
+            ).addTo(feature_group_00f06e6e249c1c2397c3acb4af04b802);
+        
+    
+            var div_icon_1a3c70e6725c1c426c9b8bcb3c941fb7 = L.divIcon({
+  "html": "\u003cdiv style=\"font:700 13px/26px Helvetica,Arial;color:#fff;text-align:center\"\u003e1\u003c/div\u003e",
+  "iconSize": [26, 26],
+  "iconAnchor": [13, 13],
+  "className": "empty",
+});
+        
+    
+                marker_5fb3992b093d0dd283a50d37ac3ab0d8.setIcon(div_icon_1a3c70e6725c1c426c9b8bcb3c941fb7);
+            
+    
+            var circle_marker_ac4d403662642145094ce1fc4dc4d171 = L.circleMarker(
+                [6.1618, -75.6062],
+                {"bubblingMouseEvents": true, "color": "#FFFFFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#0F3057", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13, "stroke": true, "weight": 3}
+            ).addTo(feature_group_00f06e6e249c1c2397c3acb4af04b802);
+        
+    
+        var popup_ed9b0d39cf7f53cc636176681d10d895 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_38b6587ce0642aeef68295fb37a0c0af = $(`<div id="html_38b6587ce0642aeef68295fb37a0c0af" style="width: 100.0%; height: 100.0%;"><b>Parada 2: CEDI Merkepaisa</b><br>Tramo desde CEDI Vaquita Itagüí: 1.70 km<br>Acumulado: 7.90 km<br>h(n) línea recta a Plataforma Logística: 4.88 km</div>`)[0];
+                popup_ed9b0d39cf7f53cc636176681d10d895.setContent(html_38b6587ce0642aeef68295fb37a0c0af);
+            
+        
+
+        circle_marker_ac4d403662642145094ce1fc4dc4d171.bindPopup(popup_ed9b0d39cf7f53cc636176681d10d895)
+        ;
+
+        
+    
+    
+            circle_marker_ac4d403662642145094ce1fc4dc4d171.bindTooltip(
+                `<div>
+                     2. CEDI Merkepaisa
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_235f16e9e9c9f8d27b502876305a8e87 = L.marker(
+                [6.1618, -75.6062],
+                {
+}
+            ).addTo(feature_group_00f06e6e249c1c2397c3acb4af04b802);
+        
+    
+            var div_icon_c0d439a1c8ee674baa2b7c5097bcf787 = L.divIcon({
+  "html": "\u003cdiv style=\"font:700 13px/26px Helvetica,Arial;color:#fff;text-align:center\"\u003e2\u003c/div\u003e",
+  "iconSize": [26, 26],
+  "iconAnchor": [13, 13],
+  "className": "empty",
+});
+        
+    
+                marker_235f16e9e9c9f8d27b502876305a8e87.setIcon(div_icon_c0d439a1c8ee674baa2b7c5097bcf787);
+            
+    
+            var circle_marker_b0da191ed04c194a8ef0633272080891 = L.circleMarker(
+                [6.1548, -75.6122],
+                {"bubblingMouseEvents": true, "color": "#FFFFFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#0F3057", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13, "stroke": true, "weight": 3}
+            ).addTo(feature_group_00f06e6e249c1c2397c3acb4af04b802);
+        
+    
+        var popup_4292aee450a165e940eb7fa7b2b9092e = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_f31698735a0fb1ce42c0c4f67a7fda3c = $(`<div id="html_f31698735a0fb1ce42c0c4f67a7fda3c" style="width: 100.0%; height: 100.0%;"><b>Parada 3: CEDI Supermú</b><br>Tramo desde CEDI Merkepaisa: 1.02 km<br>Acumulado: 8.92 km<br>h(n) línea recta a Plataforma Logística: 5.90 km</div>`)[0];
+                popup_4292aee450a165e940eb7fa7b2b9092e.setContent(html_f31698735a0fb1ce42c0c4f67a7fda3c);
+            
+        
+
+        circle_marker_b0da191ed04c194a8ef0633272080891.bindPopup(popup_4292aee450a165e940eb7fa7b2b9092e)
+        ;
+
+        
+    
+    
+            circle_marker_b0da191ed04c194a8ef0633272080891.bindTooltip(
+                `<div>
+                     3. CEDI Supermú
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_a2b649394c6a1800565eee265afeecb9 = L.marker(
+                [6.1548, -75.6122],
+                {
+}
+            ).addTo(feature_group_00f06e6e249c1c2397c3acb4af04b802);
+        
+    
+            var div_icon_38ab6dbf7425a3f8edfefb19a5df7c03 = L.divIcon({
+  "html": "\u003cdiv style=\"font:700 13px/26px Helvetica,Arial;color:#fff;text-align:center\"\u003e3\u003c/div\u003e",
+  "iconSize": [26, 26],
+  "iconAnchor": [13, 13],
+  "className": "empty",
+});
+        
+    
+                marker_a2b649394c6a1800565eee265afeecb9.setIcon(div_icon_38ab6dbf7425a3f8edfefb19a5df7c03);
+            
+    
+            var circle_marker_3d66dca907eb24d2ad66644ea497cb5e = L.circleMarker(
+                [6.1448, -75.6198],
+                {"bubblingMouseEvents": true, "color": "#FFFFFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#0F3057", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13, "stroke": true, "weight": 3}
+            ).addTo(feature_group_00f06e6e249c1c2397c3acb4af04b802);
+        
+    
+        var popup_bf0cbafb5a29b274800dbaf07957ad5c = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_e64be42f6375bffeefccc867bfe9a5be = $(`<div id="html_e64be42f6375bffeefccc867bfe9a5be" style="width: 100.0%; height: 100.0%;"><b>Parada 4: CEDI Euro La Estrella</b><br>Tramo desde CEDI Supermú: 1.39 km<br>Acumulado: 10.31 km<br>h(n) línea recta a Plataforma Logística: 7.29 km</div>`)[0];
+                popup_bf0cbafb5a29b274800dbaf07957ad5c.setContent(html_e64be42f6375bffeefccc867bfe9a5be);
+            
+        
+
+        circle_marker_3d66dca907eb24d2ad66644ea497cb5e.bindPopup(popup_bf0cbafb5a29b274800dbaf07957ad5c)
+        ;
+
+        
+    
+    
+            circle_marker_3d66dca907eb24d2ad66644ea497cb5e.bindTooltip(
+                `<div>
+                     4. CEDI Euro La Estrella
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_1ab2bab38afe19e4ec3ef617f175f888 = L.marker(
+                [6.1448, -75.6198],
+                {
+}
+            ).addTo(feature_group_00f06e6e249c1c2397c3acb4af04b802);
+        
+    
+            var div_icon_2974f063e22d88a4b10f9c622fb4fbb8 = L.divIcon({
+  "html": "\u003cdiv style=\"font:700 13px/26px Helvetica,Arial;color:#fff;text-align:center\"\u003e4\u003c/div\u003e",
+  "iconSize": [26, 26],
+  "iconAnchor": [13, 13],
+  "className": "empty",
+});
+        
+    
+                marker_1ab2bab38afe19e4ec3ef617f175f888.setIcon(div_icon_2974f063e22d88a4b10f9c622fb4fbb8);
+            
+    
+            feature_group_00f06e6e249c1c2397c3acb4af04b802.addTo(map_6e11947f631e7074396d71332fb0ea9b);
+        
+    
+            var layer_control_d7d7fa27ccfd436ddc6983fa4781408f_layers = {
+                base_layers : {
+                    "Mapa claro" : tile_layer_248fbbd3559350d0b42a5c5e7b070ee4,
+                    "Calles OSM" : tile_layer_2bcd66f848a25703916e249604a9bf0a,
+                },
+                overlays :  {
+                    "Bodega Riovalle" : feature_group_6cd89ceea241a4b876417400f874cfde,
+                    "Plataforma Log\u00edstica (destino final)" : feature_group_54fa16b6e2b3297a8c8f5e571aee7acd,
+                    "Grafo \u00b7 Poblado" : feature_group_b81b95cd81d31e05fd2514a3ebfc78fd,
+                    "Ruta \u00f3ptima \u00b7 Poblado (16.8 km)" : feature_group_1ba55e580a173a5b85a33f7cb27764ca,
+                    "Grafo \u00b7 Valle de Aburr\u00e1" : feature_group_f0ad5c581dd72aa4fa1265ea6f2f5555,
+                    "Ruta \u00f3ptima \u00b7 Valle de Aburr\u00e1 (18.0 km)" : feature_group_00f06e6e249c1c2397c3acb4af04b802,
+                },
+            };
+            let layer_control_d7d7fa27ccfd436ddc6983fa4781408f = L.control.layers(
+                layer_control_d7d7fa27ccfd436ddc6983fa4781408f_layers.base_layers,
+                layer_control_d7d7fa27ccfd436ddc6983fa4781408f_layers.overlays,
+                {
+  "position": "topleft",
+  "collapsed": false,
+  "autoZIndex": true,
+}
+            ).addTo(map_6e11947f631e7074396d71332fb0ea9b);
+
+        
+</script>
+</html>

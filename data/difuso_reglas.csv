@@ -1,0 +1,12 @@
+regla,senal_stock,rotacion,dias_desde_ultima_entrega,flete_pct,prioridad,explicacion
+D1,Bajo,Alta,*,*,Alta,Stock bajo donde el producto rota rápido: hay riesgo de agotado
+D2,Bajo,Media,*,*,Media,Stock bajo con rotación media
+D3,Bajo,Baja,*,*,Baja,Stock bajo pero el producto casi no rota
+D4,Bajo,*,Vencido,*,Alta,Stock bajo y mucho tiempo sin entrega
+D5,Incierto,Alta,Vencido,*,Alta,Sin visita y mucho tiempo sin entrega en un punto de alta rotación
+D6,Incierto,Media,Vencido,*,Media,Sin visita y mucho tiempo sin entrega en un punto de rotación media
+D7,Incierto,Alta,Normal,*,Media,Sin visita en un punto de alta rotación dentro del ciclo normal
+D8,Incierto,*,Reciente,*,Baja,Sin visita pero se le entregó hace poco
+D9,Incierto,Baja,*,*,Baja,Sin visita en un punto de baja rotación
+D10,Sin alerta,*,*,*,Baja,El mercaderista vio el stock bien: su observación manda sobre el tiempo
+D11,*,*,*,Alto,Baja,El flete se acerca al tope del 4%: despachar rinde menos
